@@ -1,5 +1,5 @@
 # Praxisprojekt
-**Thema: Entwicklung eines autonomen Fahrsystems**
+**Entwicklung eines Fahrassistenzsystems**
 
 ## GSDB Datensatz
 

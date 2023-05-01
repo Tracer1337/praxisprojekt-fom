@@ -5,4 +5,4 @@ export function getGTSDBImageUrl(number: number) {
 }
 
 export const GTSDB_ANNOTATIONS_URL =
-  "https://raw.githubusercontent.com/Tracer1337/praxisprojekt-fom/main/FullIJCNN2013/gt.txt";
+  "https://raw.githubusercontent.com/Tracer1337/praxisprojekt-fom/main/FullIJCNN2013/gt.json";

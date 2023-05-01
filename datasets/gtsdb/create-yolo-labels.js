@@ -25,5 +25,5 @@ Object.entries(gt).forEach(([imageNumber, objects]) => {
     })
     .join("\n")
 
-  fs.writeFileSync(`./labels/${imageNumber}.txt`, text)
+  fs.writeFileSync(`./labels/${imageNumber.padStart(5, "0")}.txt`, text)
 })

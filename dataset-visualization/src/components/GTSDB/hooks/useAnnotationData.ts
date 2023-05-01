@@ -18,23 +18,26 @@ export function useAnnotationData() {
   const parseData = (text: string) => {
     const data: AnnotationData = {};
 
-    text.split("\n").forEach((row) => {
-      const cols = row.split(";");
+    text
+      .split("\n")
+      .filter((row) => row.length > 0)
+      .forEach((row) => {
+        const cols = row.split(";");
 
-      const imageNumber = parseInt(cols[0].split(".")[0]);
+        const imageNumber = parseInt(cols[0].split(".")[0]);
 
-      if (!(imageNumber in data)) {
-        data[imageNumber] = [];
-      }
+        if (!(imageNumber in data)) {
+          data[imageNumber] = [];
+        }
 
-      data[imageNumber].push({
-        left: parseInt(cols[1]),
-        top: parseInt(cols[2]),
-        right: parseInt(cols[3]),
-        bottom: parseInt(cols[4]),
-        objectId: parseInt(cols[5]),
+        data[imageNumber].push({
+          left: parseInt(cols[1]),
+          top: parseInt(cols[2]),
+          right: parseInt(cols[3]),
+          bottom: parseInt(cols[4]),
+          objectId: parseInt(cols[5]),
+        });
       });
-    });
 
     return data;
   };

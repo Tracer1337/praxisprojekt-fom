@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 from flask import Flask, render_template, Response
-from multiprocessing import Manager
+from multiprocessing import Process, Manager
 
 
 app = Flask(__name__)
@@ -40,9 +40,7 @@ class Vilib(object):
 
 
     @staticmethod
-    def camera_start(web_func = True):
-        from multiprocessing import Process
-       
+    def camera_start(web_func = True):       
         worker_2 = Process(name='worker 2',target=Vilib.camera_clone)
         if web_func == True:
             worker_1 = Process(name='worker 1',target=web_camera_start)

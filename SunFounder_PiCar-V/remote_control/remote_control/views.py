@@ -11,7 +11,7 @@
 '''
 
 from django.shortcuts import render_to_response
-from .driver import camera, stream
+from .driver import camera
 from picar import back_wheels, front_wheels
 from django.http import HttpResponse
 import picar
@@ -23,6 +23,8 @@ def setup():
 	if is_setup == True:
 		return
 	from .picar_v_video_stream import Vilib
+	from .arguments import Arguments
+	Arguments.parse()
 	picar.setup()
 	db_file = "/home/pi/SunFounder_PiCar-V/remote_control/remote_control/driver/config"
 	fw = front_wheels.Front_Wheels(debug=False, db=db_file)

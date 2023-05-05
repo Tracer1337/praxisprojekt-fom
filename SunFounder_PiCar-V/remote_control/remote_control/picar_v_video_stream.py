@@ -1,12 +1,7 @@
 import numpy as np
 import cv2
-import threading
-import os
 from flask import Flask, render_template, Response
-from multiprocessing import Process, Manager
-import time
-import datetime
-
+from multiprocessing import Manager
 
 
 app = Flask(__name__)
@@ -23,7 +18,6 @@ def gen():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-        
 
 @app.route('/mjpg')
 def video_feed():
@@ -40,7 +34,6 @@ class Vilib(object):
 
     video_source = 0
 
-    detect_obj_parameter = Manager().dict()
     img_array = Manager().list(range(2))
     rt_img = np.ones((320,240),np.uint8)     
     img_array[0] = rt_img
@@ -68,16 +61,14 @@ class Vilib(object):
 
         camera.set(3,320)
         camera.set(4,240)
-        width = int(camera.get(3))
-        height = int(camera.get(4))
         camera.set(cv2.CAP_PROP_BUFFERSIZE,1)
         cv2.setUseOptimized(True)
  
-
         while True:
             _, img = camera.read()
 
             Vilib.img_array[0] = img
+
 
 if __name__ == "__main__":
     Vilib.camera_start()

@@ -3,19 +3,19 @@ import requests
 import cv2
 from flask import Flask, Response
 import json
+from message_announcer import MessageAnnouncer
+from threading import Thread
 
 vid = cv2.VideoCapture(0)
-
-args = {}
+object_stream = MessageAnnouncer()
 
 def parse_args():
   global args
   parser = argparse.ArgumentParser(description='SunFounder PiCar-V Remote Control')
   parser.add_argument('--object-detection-url', help='url to the object-detection endpoint', required=True)
-  args = parser.parse_args()
+  return parser.parse_args()
 
-def detect(img):
-  global args
+def detect(img, args):
   res = requests.post(
     args.object_detection_url,
     files={ 'image': img },
@@ -26,23 +26,42 @@ def detect(img):
   
   return res.json()
 
-def gen():
+def format_sse(data, event=None):
+    msg = f'data: {data}\n\n'
+    if event is not None:
+        msg = f'event: {event}\n{msg}'
+    return msg
+
+def run_object_detection(args):
+  print("Run Object Detection")
   while True:
     _, img = vid.read()
     frame = cv2.imencode('.jpg', img)[1].tobytes()
-    objects = detect(frame)
-    yield str.encode(json.dumps(objects))
+    objects = detect(frame, args)
+    data = format_sse(json.dumps(objects))
+    object_stream.announce(data)
 
 app = Flask(__name__)
 @app.route('/object-stream')
 def index():
-  return Response(gen(), mimetype='text/event-stream')
+  def stream():
+    messages = object_stream.listen()
+    while True:
+      msg = messages.get()
+      yield msg
 
-def object_detection_start():
-  app.run(host='0.0.0.0', port=9000,threaded=True)
+  return Response(stream(), mimetype='text/event-stream')
+
+def start_server():
+  app.run(host='0.0.0.0', port=9000, threaded=True)
 
 if __name__ == '__main__':
-  parse_args()
-  object_detection_start()
+  args = parse_args()
+
+  thread = Thread(target=run_object_detection, args=(args,))
+  thread.start()
+
+  start_server()
+
   vid.release()
 

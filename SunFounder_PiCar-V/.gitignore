@@ -2,6 +2,4 @@
 *.log
 *auto_ip.inf
 .vscode
-*.ai
-*.indd
-docs/build/*
+*__pycache__

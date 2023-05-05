@@ -1,3 +1,8 @@
+# GTSDB YOLOv5s (1280)
+
+Trainingsdauer: 22.502h
+
+```
 Model summary: 157 layers, 7126096 parameters, 0 gradients, 16.1 GFLOPs
                  Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████
                    all        900       1212      0.987      0.895      0.977      0.901
@@ -44,3 +49,5 @@ priority at next intersection        900         38       0.99          1      0
             roundabout        900         10      0.971          1      0.995      0.881
 restriction ends (overtaking)        900          7      0.974          1      0.995      0.882
 restriction ends (overtaking (trucks))        900         11      0.978          1      0.995      0.904
+
+```

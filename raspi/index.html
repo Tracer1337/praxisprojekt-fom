@@ -1,0 +1,63 @@
+<div class="container">
+  <img />
+  <div class="canvas">
+    <canvas></canvas>
+  </div>
+</div>
+
+<style>
+  .container {
+    position: relative;
+  }
+
+  .canvas {
+    position: absolute;
+    inset: 0;
+  }
+
+  .canvas canvas {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  const host = "http://192.168.0.102:9000"
+
+  const evtSource = new EventSource(`${host}/road-sign-stream`);
+
+  document.querySelector("img").src = `${host}/video-stream`
+
+  evtSource.onmessage = (e) => {
+    const detections = JSON.parse(e.data)
+    initCanvas()
+    detections.forEach(drawDetection)
+  };
+
+  let context
+
+  const canvas = document.querySelector("canvas")
+
+  const dummy = [{ "xmin": 171.2554168701, "ymin": 165.1106567383, "xmax": 246.3257598877, "ymax": 241.6043701172, "confidence": 0.9587481618, "class": 14, "name": "stop" }]
+
+  function initCanvas() {
+    context = canvas.getContext("2d")
+    canvas.width = canvas.clientWidth
+    canvas.height = canvas.clientHeight
+    context.clearRect(0, 0, canvas.width, canvas.height)
+  }
+
+  function drawDetection(detection) {
+    context.strokeStyle = "lime"
+    context.lineWidth = 3
+
+    console.log(detection.name)
+
+    context.strokeRect(
+      detection.xmin,
+      detection.ymin,
+      detection.xmax - detection.xmin,
+      detection.ymax - detection.ymin
+    )
+  }
+</script>

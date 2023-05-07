@@ -15,8 +15,6 @@ import tempfile
 import subprocess
 import os
 
-_CODE_DIR_ = "/home/pi/SunFounder_PiCar-V"
-
 MJPG_STREAMER_PATH = "mjpg_streamer"
 INPUT_PATH = "/usr/local/lib/input_uvc.so" #  -r 640x320 -f 30 -q 100 r: resolution, f: frame per second, q: quality
 # INPUT_PATH = "/usr/local/lib/input_uvc.so -r 640x320 -f 30 -q 100" # r: resolution, f: frame per second, q: quality

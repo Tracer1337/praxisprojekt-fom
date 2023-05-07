@@ -1,24 +1,21 @@
-import argparse
 import requests
 import cv2
 from flask import Flask, Response
 import json
+import os
 from message_announcer import MessageAnnouncer
 from threading import Thread
+from dotenv import load_dotenv
+
+load_dotenv()
 
 vid = cv2.VideoCapture(0)
 
 road_sign_stream = MessageAnnouncer()
 
-def parse_args():
-  global args
-  parser = argparse.ArgumentParser(description='SunFounder PiCar-V Remote Control')
-  parser.add_argument('--road-sign-detection-url', help='url to the road-sign-detection endpoint', required=True)
-  return parser.parse_args()
-
-def detect_road_signs(img, args):
+def detect_road_signs(img):
   res = requests.post(
-    args.road_sign_detection_url,
+    os.environ['ROAD_SIGN_DETECTION_URL'],
     files={ 'image': img },
   )
 
@@ -33,12 +30,12 @@ def format_sse(data, event=None):
         msg = f'event: {event}\n{msg}'
     return msg
 
-def run_road_sign_detection(args):
+def run_road_sign_detection():
   print("Run Road Sign Detection")
   while True:
     _, img = vid.read()
     frame = cv2.imencode('.jpg', img)[1].tobytes()
-    detections = detect_road_signs(frame, args)
+    detections = detect_road_signs(frame)
     data = format_sse(json.dumps(detections))
     road_sign_stream.announce(data)
 
@@ -57,9 +54,7 @@ def start_server():
   app.run(host='0.0.0.0', port=9000, threaded=True)
 
 if __name__ == '__main__':
-  args = parse_args()
-
-  thread = Thread(target=run_road_sign_detection, args=(args,))
+  thread = Thread(target=run_road_sign_detection)
   thread.start()
 
   start_server()

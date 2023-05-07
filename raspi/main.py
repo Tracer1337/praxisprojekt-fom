@@ -48,7 +48,9 @@ def run_road_sign_detection():
 def run_camera_capture():
   print("Run Video Capture")
   while True:
-    _, img = vid.read()
+    ret, img = vid.read()
+    if not ret:
+      continue
     frame = cv2.imencode('.jpg', img)[1].tobytes()
     camera_stream.announce(frame)
 

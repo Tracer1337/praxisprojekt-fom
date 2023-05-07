@@ -1,11 +1,12 @@
 import queue
 
 class MessageAnnouncer(object):
-	def __init__(self):
+	def __init__(self, size):
 		self.listeners = []
+		self.size = size
 
 	def listen(self):
-		q = queue.Queue(maxsize=5)
+		q = queue.Queue(maxsize=self.size)
 		self.listeners.append(q)
 		return q
 
@@ -14,4 +15,4 @@ class MessageAnnouncer(object):
 			try:
 				self.listeners[i].put_nowait(msg)
 			except queue.Full:
-				del self.listeners[i]
+				continue

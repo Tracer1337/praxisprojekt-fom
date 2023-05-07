@@ -16,7 +16,8 @@ vid = cv2.VideoCapture(0)
 vid.set(cv2.CAP_PROP_BUFFERSIZE,1)
 cv2.setUseOptimized(True)
 
-road_sign_stream = MessageAnnouncer()
+road_sign_stream = MessageAnnouncer(size=5)
+camera_stream = MessageAnnouncer(size=1)
 
 def detect_road_signs(img):
   res = requests.post(
@@ -37,12 +38,19 @@ def format_sse(data, event=None):
 
 def run_road_sign_detection():
   print("Run Road Sign Detection")
+  messages = camera_stream.listen()
   while True:
-    _, img = vid.read()
-    frame = cv2.imencode('.jpg', img)[1].tobytes()
+    frame = messages.get()
     detections = detect_road_signs(frame)
     data = format_sse(json.dumps(detections))
     road_sign_stream.announce(data)
+
+def run_camera_capture():
+  print("Run Video Capture")
+  while True:
+    _, img = vid.read()
+    frame = cv2.imencode('.jpg', img)[1].tobytes()
+    camera_stream.announce(frame)
 
 app = Flask(__name__)
 CORS(app)
@@ -57,24 +65,25 @@ def road_sign_detection_stream():
 
   return Response(stream(), mimetype='text/event-stream')
 
-def generate_video_feed():
-  while True:  
-    _, img = vid.read()
-    frame = cv2.imencode('.jpg', img)[1].tobytes()
-    yield (b'--frame\r\n'
-      b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
 @app.route('/video-stream')
 def video_feed():
-  return Response(generate_video_feed(),
+  def stream():
+    messages = camera_stream.listen()
+    while True:
+      frame = messages.get()
+      yield (b'--frame\r\n'
+        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+  return Response(stream(),
     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def start_server():
   app.run(host='0.0.0.0', port=9000, threaded=True)
 
 if __name__ == '__main__':
-  thread = Thread(target=run_road_sign_detection)
-  thread.start()
+  Thread(target=run_road_sign_detection).start()
+
+  Thread(target=run_camera_capture).start()
 
   start_server()
 

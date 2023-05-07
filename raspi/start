@@ -1,2 +1,0 @@
-#!/bin/bash
-(trap 'kill 0' SIGINT; python3 SunFounder_PiCar-V/remote_control/manage.py runserver 0.0.0.0:8000 & python3 main.py)

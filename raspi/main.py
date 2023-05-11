@@ -9,6 +9,8 @@ from threading import Thread
 from dotenv import load_dotenv
 from pathlib import Path
 from dataset import traffic_sign_mapping
+from websocket_server import WebsocketServer
+from controller_state import ControllerState
 
 load_dotenv()
 
@@ -28,6 +30,8 @@ cv2.setUseOptimized(True)
 road_sign_stream = MessageAnnouncer(size=5)
 camera_stream = MessageAnnouncer(size=1)
 
+controller = ControllerState(sunfounder_port=os.environ['SUNFOUNDER_PORT'])
+
 def detect_road_signs(img):
   res = requests.post(
     os.environ['ROAD_SIGN_DETECTION_URL'],
@@ -39,20 +43,13 @@ def detect_road_signs(img):
   
   return res.json()
 
-def format_sse(data, event=None):
-    msg = f'data: {data}\n\n'
-    if event is not None:
-        msg = f'event: {event}\n{msg}'
-    return msg
-
 def run_road_sign_detection():
   print("Run Road Sign Detection")
   messages = camera_stream.listen()
   while True:
     frame = messages.get()
     detections = detect_road_signs(frame)
-    data = format_sse(json.dumps(detections))
-    road_sign_stream.announce(data)
+    road_sign_stream.announce(detections)
 
 def run_camera_capture():
   print("Run Video Capture")
@@ -65,16 +62,7 @@ def run_camera_capture():
 
 app = Flask(__name__)
 CORS(app)
-
-@app.route('/road-sign-stream')
-def road_sign_detection_stream():
-  def stream():
-    messages = road_sign_stream.listen()
-    while True:
-      msg = messages.get()
-      yield msg
-
-  return Response(stream(), mimetype='text/event-stream')
+ws = WebsocketServer(host='0.0.0.0', port=9001)
 
 @app.route('/video-stream')
 def video_feed():
@@ -93,13 +81,45 @@ def traffic_sign(objectId):
   name = traffic_sign_mapping[objectId]
   return send_from_directory(TRAFFIC_SIGN_DATASET_DIR, name + '.jpg')
 
+def message_received(client, server, message):
+  message = json.loads(message)
+  event, data = message['event'], message['data']
+  match event:
+    case 'controller.update':
+      controller.update(data)
+
+ws.set_fn_message_received(message_received)
+
+def emit_road_sign_data():
+  messages = road_sign_stream.listen()
+  while True:
+    msg = messages.get()
+    ws.send_message_to_all(json.dumps({
+      'event': 'objects',
+      'data': msg,
+    }))
+
+def emit_controller_updates():
+  while True:
+    with controller.cv:
+      controller.cv.wait()
+    ws.send_message_to_all(json.dumps(controller.__dict__()))
+
 def start_server():
+  ws.run_forever(threaded=True)
+
+  Thread(target=emit_road_sign_data).start()
+
+  Thread(target=emit_controller_updates).start()
+
   app.run(host='0.0.0.0', port=9000, threaded=True)
 
 if __name__ == '__main__':
   Thread(target=run_road_sign_detection).start()
 
   Thread(target=run_camera_capture).start()
+
+  controller.setup()
 
   start_server()
 

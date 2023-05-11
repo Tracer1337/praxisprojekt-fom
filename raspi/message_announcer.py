@@ -1,6 +1,6 @@
 import queue
 
-class MessageAnnouncer(object):
+class MessageAnnouncer:
 	def __init__(self, size):
 		self.listeners = []
 		self.size = size

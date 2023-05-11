@@ -90,12 +90,20 @@ def message_received(client, server, message):
 
 ws.set_fn_message_received(message_received)
 
+def new_client(client, server):
+  server.send_message(client, json.dumps({
+    'event': 'controller.state',
+    'data': controller.__dict__(),
+  }))
+
+ws.set_fn_new_client(new_client)
+
 def emit_road_sign_data():
   messages = road_sign_stream.listen()
   while True:
     msg = messages.get()
     ws.send_message_to_all(json.dumps({
-      'event': 'objects',
+      'event': 'traffic-sign.detections',
       'data': msg,
     }))
 
@@ -103,7 +111,10 @@ def emit_controller_updates():
   while True:
     with controller.cv:
       controller.cv.wait()
-    ws.send_message_to_all(json.dumps(controller.__dict__()))
+    ws.send_message_to_all(json.dumps({
+      'event': 'controller.state',
+      'data': controller.__dict__()
+    }))
 
 def start_server():
   ws.run_forever(threaded=True)

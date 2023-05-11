@@ -16,7 +16,7 @@ class ControllerState:
     self.cameraLeft = False
     self.cameraRight = False
 
-    self.speed = 1
+    self.speed = True
     self.automation = False
 
     self.action_mapping = {

@@ -1,14 +1,23 @@
 import requests
 import cv2
-from flask import Flask, Response
+from flask import Flask, Response, send_from_directory
 from flask_cors import CORS
 import json
 import os
 from message_announcer import MessageAnnouncer
 from threading import Thread
 from dotenv import load_dotenv
+from pathlib import Path
+from dataset import traffic_sign_mapping
 
 load_dotenv()
+
+PROJECT_ROOT_DIR = Path(__file__, "..", "..").resolve()
+TRAFFIC_SIGN_DATASET_DIR = Path(
+  PROJECT_ROOT_DIR,
+  "datasets",
+  "traffic-signs",
+).resolve()
 
 vid = cv2.VideoCapture(0)
 # vid.set(3,320)
@@ -78,6 +87,11 @@ def video_feed():
 
   return Response(stream(),
     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/traffic-sign/<objectId>')
+def traffic_sign(objectId):
+  name = traffic_sign_mapping[objectId]
+  return send_from_directory(TRAFFIC_SIGN_DATASET_DIR, name + '.jpg')
 
 def start_server():
   app.run(host='0.0.0.0', port=9000, threaded=True)

@@ -19,9 +19,8 @@ function ObjectList({
       }}
     >
       {objects.map((object, i) => (
-        <Grid item>
+        <Grid item key={i}>
           <Box
-            key={i}
             component="img"
             src={getImageUrl(object.class)}
             alt={object.name}

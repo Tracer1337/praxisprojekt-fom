@@ -1,5 +1,5 @@
 import { CssBaseline, Box, Paper } from "@mui/material";
-import { getTrafficSignUrl, videoStreamURL } from "./lib/raspi";
+import { getTrafficSignUrl, videoStreamUrl } from "./lib/raspi";
 import Header from "./components/Header";
 import VideoStream from "./components/VideoStream";
 import ObjectList from "./components/ObjectList";
@@ -36,7 +36,7 @@ function App() {
             sx={{ display: "flex", justifyContent: "center" }}
             variant="outlined"
           >
-            <VideoStream src={videoStreamURL} alt="Video Stream" />
+            <VideoStream src={videoStreamUrl} alt="Video Stream" />
           </Paper>
         </Box>
         <Box sx={{ gridColumn: 3, ml: 2 }}>

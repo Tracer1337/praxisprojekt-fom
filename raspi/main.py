@@ -90,7 +90,13 @@ def message_received(client, server, message):
   event, data = message['event'], message['data']
   match event:
     case 'controller.update':
-      controller.update(data)
+      try:
+        controller.update(data)
+      except Exception as e:
+        server.send_message(client, json.dumps({
+          'event': 'error',
+          'data': str(e),
+        }))
 
 ws.set_fn_message_received(message_received)
 

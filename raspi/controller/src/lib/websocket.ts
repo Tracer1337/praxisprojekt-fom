@@ -5,7 +5,7 @@ import {
   createContext,
   PropsWithChildren,
   useContext,
-  useMemo,
+  createElement,
 } from "react";
 import { WebsocketReceiveEvent, WebsocketSendEvent } from "./raspi";
 
@@ -14,22 +14,34 @@ const WebsocketContext = createContext<null | {
   send: (event: WebsocketSendEvent) => void;
   websocket: WebSocket;
 }>(null);
-function WebsocketContextProvider({
+
+export function WebsocketContextProvider({
   url,
   children,
 }: PropsWithChildren<{ url: string }>) {
-  const websocket = useMemo(() => new WebSocket(url), [url]);
+  const [websocket, setWebsocket] = useState<WebSocket>();
 
   const [ready, setReady] = useState(false);
 
   const send = useCallback(
     (event: WebsocketSendEvent) => {
-      websocket.send(JSON.stringify(event));
+      websocket?.send(JSON.stringify(event));
     },
     [websocket]
   );
 
   useEffect(() => {
+    setWebsocket((websocket) => {
+      websocket?.close();
+      return new WebSocket(url);
+    });
+  }, [setWebsocket, url]);
+
+  useEffect(() => {
+    if (!websocket) {
+      return;
+    }
+
     const openHandler = () => setReady(true);
 
     const closeHandler = () => setReady(false);
@@ -45,14 +57,20 @@ function WebsocketContextProvider({
     };
   }, [websocket, setReady]);
 
-  return (
-    <WebsocketContext.Provider value={{ ready, send, websocket }}>
-      {children}
-    </WebsocketContext.Provider>
+  if (!websocket) {
+    return null;
+  }
+
+  return createElement(
+    WebsocketContext.Provider,
+    { value: { ready, send, websocket } },
+    children
   );
 }
 
-function useWebsocket(onMessage: (message: WebsocketReceiveEvent) => void) {
+export function useWebsocket(
+  onMessage: (message: WebsocketReceiveEvent) => void
+) {
   const context = useContext(WebsocketContext);
 
   if (!context) {
@@ -75,5 +93,3 @@ function useWebsocket(onMessage: (message: WebsocketReceiveEvent) => void) {
 
   return { ready, send };
 }
-
-export { useWebsocket, WebsocketContextProvider };

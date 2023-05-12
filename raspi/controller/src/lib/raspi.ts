@@ -1,16 +1,9 @@
-const RASPI_HOSTNAME = import.meta.env.DEV
-  ? "localhost"
-  : window.location.hostname;
-
-const RASPI_HTTP_HOST = `${RASPI_HOSTNAME}:9000`;
-const RASPI_WS_HOST = `${RASPI_HOSTNAME}:9001`;
-
-export const videoStreamUrl = `http://${RASPI_HTTP_HOST}/video-stream`;
-
-export const websocketUrl = `ws://${RASPI_WS_HOST}`;
-
-export const getTrafficSignUrl = (objectId: number) =>
-  `http://${RASPI_HTTP_HOST}/traffic-sign/${objectId}`;
+import {
+  createContext,
+  createElement,
+  useContext,
+  PropsWithChildren,
+} from "react";
 
 export type ObjectDetection = {
   x: number;
@@ -48,3 +41,44 @@ export type WebsocketReceiveEvent =
       event: "traffic-sign.detections";
       data: ObjectDetection[];
     };
+
+export function getRaspiConfig(host: string) {
+  const httpUrl = `http://${host}:9000`;
+  const websocketUrl = `ws://${host}:9001`;
+
+  const healtchCheckUrl = `${httpUrl}/health-check`;
+  const videoStreamUrl = `${httpUrl}/video-stream`;
+
+  const getTrafficSignUrl = (objectId: number) =>
+    `${httpUrl}/traffic-sign/${objectId}`;
+
+  return {
+    websocketUrl,
+    healtchCheckUrl,
+    videoStreamUrl,
+    getTrafficSignUrl,
+  };
+}
+
+const RaspiContext = createContext<{ host: string } | null>(null);
+
+export function RaspiContextProvider({
+  host,
+  children,
+}: PropsWithChildren<{ host: string }>) {
+  if (!host) {
+    return null;
+  }
+
+  return createElement(RaspiContext.Provider, { value: { host } }, children);
+}
+
+export function useRaspiConfig() {
+  const context = useContext(RaspiContext);
+
+  if (!context) {
+    throw new Error("Cannot use context outside provider");
+  }
+
+  return getRaspiConfig(context.host);
+}

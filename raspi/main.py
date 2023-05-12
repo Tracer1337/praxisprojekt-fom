@@ -64,6 +64,10 @@ app = Flask(__name__)
 CORS(app)
 ws = WebsocketServer(host='0.0.0.0', port=9001)
 
+@app.route('/health-check')
+def health_check():
+  return 'available'
+
 @app.route('/video-stream')
 def video_feed():
   def stream():

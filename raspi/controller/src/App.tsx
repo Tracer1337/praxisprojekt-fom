@@ -1,12 +1,14 @@
-import { CssBaseline, Box, Paper } from "@mui/material";
-import { getTrafficSignUrl, videoStreamUrl } from "./lib/raspi";
+import { Box, Paper } from "@mui/material";
 import Header from "./components/Header";
 import VideoStream from "./components/VideoStream";
 import ObjectList from "./components/ObjectList";
 import Controller from "./components/Controller";
 import Action from "./components/Action";
+import { useRaspiConfig } from "./lib/raspi";
 
 function App() {
+  const { videoStreamUrl, getTrafficSignUrl } = useRaspiConfig();
+
   const testObjects = [
     {
       x: 100,
@@ -19,7 +21,7 @@ function App() {
   ];
 
   return (
-    <CssBaseline>
+    <>
       <Box sx={{ mb: 4 }}>
         <Header />
       </Box>
@@ -51,7 +53,7 @@ function App() {
           </Paper>
         </Box>
       </Box>
-    </CssBaseline>
+    </>
   );
 }
 

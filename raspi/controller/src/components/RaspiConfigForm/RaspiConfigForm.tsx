@@ -1,42 +1,23 @@
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { getRaspiConfig } from "../../lib/raspi";
+import useSubmit from "./hooks/useSubmit";
+import { RaspiConfigFormData } from "./types";
 
-type FormData = {
-  host: string;
-};
-
-type FormError = {
-  host?: string;
-};
-
-function RaspiConfigForm({ onSubmit }: { onSubmit: (data: FormData) => void }) {
+function RaspiConfigForm({
+  onSubmit,
+}: {
+  onSubmit: (data: RaspiConfigFormData) => void;
+}) {
   const [host, setHost] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<FormError>({});
 
-  const handleSubmit = () => {
-    setIsLoading(true);
-    fetch(getRaspiConfig(host).healtchCheckUrl)
-      .then((res) => res.text())
-      .then((text) => {
-        if (text !== "available") {
-          throw new Error();
-        }
-        onSubmit({ host });
-      })
-      .catch(() => setError({ host: "Der Host ist nicht erreichbar" }))
-      .finally(() => setIsLoading(false));
-  };
+  const { isLoading, error, submit, formSubmit } = useSubmit({
+    onSubmit,
+    data: { host },
+  });
 
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        handleSubmit();
-      }}
-    >
+    <form onSubmit={formSubmit}>
       <TextField
         label="Host"
         fullWidth
@@ -49,7 +30,7 @@ function RaspiConfigForm({ onSubmit }: { onSubmit: (data: FormData) => void }) {
       <LoadingButton
         variant="outlined"
         fullWidth
-        onClick={handleSubmit}
+        onClick={submit}
         loading={isLoading}
       >
         Verbinden

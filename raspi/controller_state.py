@@ -61,12 +61,18 @@ class ControllerState:
   def run_sunfounder_action(self, action, value=None):
     if not self.available:
       return
-    query = 'speed' if action == 'speed' else 'action'
-    value = value if action == 'speed' else action
+    action, value = self.get_query(action, value)
     try:
-      requests.get(f'http://localhost:{self.sunfounder_port}/run?{query}={value}')
+      requests.get(f'http://localhost:{self.sunfounder_port}/run?{action}={value}')
     except:
       self.available = False
+  
+  def get_query(self, action, value):
+    if action == 'speed':
+      value = 5 if value else 1
+      return action, value
+
+    return 'action', action
 
   def setup(self):
     self.run_sunfounder_action('setup')

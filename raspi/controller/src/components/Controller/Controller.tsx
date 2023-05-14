@@ -4,10 +4,19 @@ import Joystick from "./Joystick";
 import MemoryIcon from "@mui/icons-material/Memory";
 import SpeedIcon from "@mui/icons-material/Speed";
 import { isMobile } from "../../lib/responsive";
+import useKeyboardControls from "./hooks/useKeyboardControls";
 
 function Controller() {
-  const { state, handleMove, handleCamera, setAutomation, setSpeed } =
-    useControllerState();
+  const {
+    state,
+    sendControllerUpdate,
+    handleMove,
+    handleCamera,
+    setAutomation,
+    setSpeed,
+  } = useControllerState();
+
+  useKeyboardControls({ state, update: sendControllerUpdate });
 
   if (!state) {
     return <CircularProgress />;

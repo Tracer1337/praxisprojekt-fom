@@ -1,9 +1,5 @@
 import { useState, useCallback } from "react";
-import {
-  ControllerState,
-  WebsocketReceiveEvent,
-  WebsocketSendEvent,
-} from "../../../lib/raspi";
+import { ControllerState, WebsocketReceiveEvent } from "../../../lib/raspi";
 import { useWebsocket } from "../../../lib/websocket";
 
 const threshold = 0.5;
@@ -20,9 +16,7 @@ function useControllerState() {
   const { ready, send } = useWebsocket(handleMessage);
 
   const sendControllerUpdate = useCallback(
-    (
-      data: Extract<WebsocketSendEvent, { event: "controller.update" }>["data"]
-    ) => {
+    (data: Partial<ControllerState>) => {
       if (!ready) {
         return;
       }
@@ -73,7 +67,14 @@ function useControllerState() {
     [sendControllerUpdate]
   );
 
-  return { state, handleMove, handleCamera, setAutomation, setSpeed };
+  return {
+    state,
+    sendControllerUpdate,
+    handleMove,
+    handleCamera,
+    setAutomation,
+    setSpeed,
+  };
 }
 
 export default useControllerState;

@@ -48,9 +48,7 @@ function App() {
       <Box sx={{ maxWidth: 800, mx: "auto" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Action />
-          <Paper variant="outlined" sx={{ p: 2 }}>
-            <Controller />
-          </Paper>
+          <Controller />
         </Box>
       </Box>
     </>

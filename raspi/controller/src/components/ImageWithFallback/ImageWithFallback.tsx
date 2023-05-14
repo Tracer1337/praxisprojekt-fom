@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Paper, Box } from "@mui/material";
 
-function VideoStream({ src, alt }: { src: string; alt: string }) {
+function ImageWithFallback({ src, alt }: { src: string; alt: string }) {
   const [error, setError] = useState(false);
 
   return error ? (
@@ -14,4 +14,4 @@ function VideoStream({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-export default VideoStream;
+export default ImageWithFallback;

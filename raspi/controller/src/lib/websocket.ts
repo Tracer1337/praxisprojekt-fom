@@ -69,7 +69,7 @@ export function WebsocketContextProvider({
 }
 
 export function useWebsocket(
-  onMessage: (message: WebsocketReceiveEvent) => void
+  onMessage?: (message: WebsocketReceiveEvent) => void
 ) {
   const context = useContext(WebsocketContext);
 
@@ -81,7 +81,7 @@ export function useWebsocket(
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
-      onMessage(JSON.parse(event.data));
+      onMessage?.(JSON.parse(event.data));
     };
 
     websocket.addEventListener("message", messageHandler);

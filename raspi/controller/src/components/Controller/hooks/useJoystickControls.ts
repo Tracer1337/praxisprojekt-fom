@@ -4,11 +4,9 @@ import Hammer from "hammerjs";
 function useJoystickControls({
   size,
   onChange,
-  reset = true,
 }: {
   size: number;
   onChange: (data: { x: number; y: number }) => void;
-  reset?: boolean;
 }) {
   const thumbRef = useRef<HTMLDivElement>();
 
@@ -36,7 +34,7 @@ function useJoystickControls({
 
       onChange({
         x: position.x / center,
-        y: position.y / center,
+        y: -position.y / center,
       });
     };
 
@@ -49,9 +47,6 @@ function useJoystickControls({
     });
 
     gestures.on("panend", () => {
-      if (!reset) {
-        return;
-      }
       setPosition(0, 0);
     });
 
@@ -60,7 +55,7 @@ function useJoystickControls({
     return () => {
       gestures.destroy();
     };
-  }, [size, onChange, reset]);
+  }, [size, onChange]);
 
   return { thumbRef };
 }

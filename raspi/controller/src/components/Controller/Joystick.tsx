@@ -4,13 +4,11 @@ import useJoystickControls from "./hooks/useJoystickControls";
 function Joystick({
   size,
   onChange,
-  reset,
 }: {
   size: number;
   onChange: (data: { x: number; y: number }) => void;
-  reset?: boolean;
 }) {
-  const { thumbRef } = useJoystickControls({ size, onChange, reset });
+  const { thumbRef } = useJoystickControls({ size, onChange });
 
   return (
     <Paper

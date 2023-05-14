@@ -1,57 +1,40 @@
-import { Box, Paper } from "@mui/material";
-import Header from "./components/Header";
-import VideoStream from "./components/VideoStream";
-import ObjectList from "./components/ObjectList";
-import Controller from "./components/Controller";
-import Action from "./components/Action";
-import { useRaspiConfig } from "./lib/raspi";
+import { useState } from "react";
+import { Box, Paper, Typography } from "@mui/material";
+import { WebsocketContextProvider } from "./lib/websocket.ts";
+import { RaspiContextProvider, getRaspiConfig } from "./lib/raspi.ts";
+import RaspiConfigForm from "./components/RaspiConfigForm/RaspiConfigForm.tsx";
+import MainView from "./views/MainView/MainView.tsx";
 
 function App() {
-  const { videoStreamUrl, getTrafficSignUrl } = useRaspiConfig();
+  const [raspiHost, setRaspiHost] = useState<string>();
 
-  const testObjects = [
-    {
-      x: 100,
-      y: 100,
-      width: 50,
-      height: 50,
-      class: 14,
-      name: "stop",
-    },
-  ];
-
-  return (
-    <>
-      <Box sx={{ mb: 4 }}>
-        <Header />
-      </Box>
+  if (!raspiHost) {
+    return (
       <Box
         sx={{
-          display: "grid",
-          gridTemplateColumns: "1fr 800px 1fr",
-          gridTemplateRows: "480px",
-          mb: 4,
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Box sx={{ gridColumn: 2 }}>
-          <Paper
-            sx={{ display: "flex", justifyContent: "center" }}
-            variant="outlined"
-          >
-            <VideoStream src={videoStreamUrl} alt="Video Stream" />
-          </Paper>
-        </Box>
-        <Box sx={{ gridColumn: 3, ml: 2 }}>
-          <ObjectList objects={testObjects} getImageUrl={getTrafficSignUrl} />
-        </Box>
+        <Paper variant="outlined" sx={{ width: 500, p: 4 }}>
+          <Typography variant="h6" sx={{ mb: 3 }}>
+            Raspberry-Pi Controller
+          </Typography>
+          <RaspiConfigForm onSubmit={(data) => setRaspiHost(data.host)} />
+        </Paper>
       </Box>
-      <Box sx={{ maxWidth: 800, mx: "auto" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Action />
-          <Controller />
-        </Box>
-      </Box>
-    </>
+    );
+  }
+
+  return (
+    <RaspiContextProvider host={raspiHost}>
+      <WebsocketContextProvider url={getRaspiConfig(raspiHost).websocketUrl}>
+        <MainView />
+      </WebsocketContextProvider>
+    </RaspiContextProvider>
   );
 }
 

@@ -1,13 +1,16 @@
 import { Box, Paper } from "@mui/material";
 import Header from "../../components/Header";
-import VideoStream from "../../components/VideoStream";
 import ObjectList from "../../components/ObjectList";
 import Controller from "../../components/Controller";
 import Action from "../../components/Action";
 import { useRaspiConfig } from "../../lib/raspi";
+import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
+import ImageWithObjects from "./ImageWithObjects";
 
 function MainView() {
   const { videoStreamUrl, getTrafficSignUrl } = useRaspiConfig();
+
+  const trafficSignDetections = useTrafficSignDetection();
 
   return (
     <>
@@ -27,11 +30,17 @@ function MainView() {
             sx={{ display: "flex", justifyContent: "center" }}
             variant="outlined"
           >
-            <VideoStream src={videoStreamUrl} alt="Video Stream" />
+            <ImageWithObjects
+              src={videoStreamUrl}
+              objects={trafficSignDetections}
+            />
           </Paper>
         </Box>
         <Box sx={{ gridColumn: 3, ml: 2 }}>
-          <ObjectList objects={[]} getImageUrl={getTrafficSignUrl} />
+          <ObjectList
+            objects={trafficSignDetections}
+            getImageUrl={getTrafficSignUrl}
+          />
         </Box>
       </Box>
       <Box sx={{ maxWidth: 800, mx: "auto" }}>

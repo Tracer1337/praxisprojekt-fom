@@ -6,10 +6,10 @@ import {
 } from "react";
 
 export type ObjectDetection = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  xmin: number;
+  xmax: number;
+  ymin: number;
+  ymax: number;
   class: number;
   name: string;
 };

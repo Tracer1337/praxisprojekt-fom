@@ -3,7 +3,7 @@ import { isMobile } from "../../lib/responsive";
 
 function Action() {
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sx={{ visibility: "hidden" }}>
       <Grid item>
         <Box sx={{ width: 48, height: 48, backgroundColor: "lightgray" }} />
       </Grid>

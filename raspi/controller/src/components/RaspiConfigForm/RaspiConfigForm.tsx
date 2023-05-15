@@ -9,7 +9,7 @@ function RaspiConfigForm({
 }: {
   onSubmit: (data: RaspiConfigFormData) => void;
 }) {
-  const [host, setHost] = useState("");
+  const [host, setHost] = useState(window.location.hostname);
 
   const { isLoading, error, submit, formSubmit } = useSubmit({
     onSubmit,

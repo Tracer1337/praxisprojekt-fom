@@ -56,9 +56,9 @@ function Controller() {
         spacing={3}
         sx={{ justifyContent: "space-between", alignItems: "flex-end" }}
       >
-        <Joystick size={100} onChange={handleMove} />
+        <Joystick size={130} onChange={handleMove} />
         {buttons}
-        <Joystick size={100} onChange={handleCamera} />
+        <Joystick size={130} onChange={handleCamera} />
       </Stack>
     );
   }

@@ -1,0 +1,17 @@
+{
+  "name": "Raspi Controller",
+  "short_name": "Raspi",
+  "lang": "de-DE",
+  "orientation": "landscape",
+  "start_url": "/",
+  "background_color": "#000",
+  "theme_color": "#fff",
+  "display": "standalone",
+  "description": "Raspberry-Pi Controller - Praxisprojekt FOM",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "96x96"
+    }
+  ]
+}

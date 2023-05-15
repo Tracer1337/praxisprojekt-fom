@@ -63,7 +63,7 @@ class ControllerState:
       return
     action, value = self.get_query(action, value)
     try:
-      requests.get(f'http://localhost:{self.sunfounder_port}/run?{action}={value}')
+      requests.get(f'http://localhost:{self.sunfounder_port}/run/?{action}={value}')
     except:
       self.available = False
   

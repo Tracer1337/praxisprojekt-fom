@@ -1,5 +1,6 @@
 import { Grid, Box } from "@mui/material";
 import { ObjectDetection } from "../../lib/raspi";
+import { isMobile } from "../../lib/responsive";
 
 function ObjectList({
   objects,
@@ -14,7 +15,7 @@ function ObjectList({
       spacing={1}
       sx={{
         height: "100%",
-        flexDirection: "column",
+        flexDirection: isMobile ? "row-reverse" : "column",
         alignContent: "flex-start",
       }}
     >
@@ -24,7 +25,7 @@ function ObjectList({
             component="img"
             src={getImageUrl(object.class)}
             alt={object.name}
-            sx={{ width: 64 }}
+            sx={{ width: isMobile ? 48 : 64 }}
           />
         </Grid>
       ))}

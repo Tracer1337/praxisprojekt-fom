@@ -4,6 +4,7 @@ import ImageWithObjects from "./ImageWithObjects";
 import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
 import Controller from "../../components/Controller";
 import ObjectList from "../../components/ObjectList";
+import Action from "../../components/Action";
 
 function MobileLayout() {
   const { videoStreamUrl, getTrafficSignUrl } = useRaspiConfig();
@@ -25,12 +26,12 @@ function MobileLayout() {
           position: "relative",
           height: "100vh",
           aspectRatio: 4 / 3,
-          img: {
-            width: "100%",
-          },
-          "& > .MuiBox-root:first-child": {
+          "& > .MuiBox-root:first-of-type": {
             height: "100vh",
             overflow: "hidden",
+            img: {
+              width: "100%",
+            },
           },
         }}
       >
@@ -45,15 +46,23 @@ function MobileLayout() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
+            m: 2,
           }}
         >
-          <Box sx={{ height: "40%" }}>
+          <Box
+            sx={{
+              height: "40%",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Action />
             <ObjectList
               objects={trafficSignDetections}
               getImageUrl={getTrafficSignUrl}
             />
           </Box>
-          <Box sx={{ m: 2 }}>
+          <Box>
             <Controller />
           </Box>
         </Box>

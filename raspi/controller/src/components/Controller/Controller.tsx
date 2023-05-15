@@ -23,7 +23,14 @@ function Controller() {
   }
 
   const buttons = (
-    <Stack direction="row">
+    <Stack
+      direction="row"
+      sx={{
+        "& .MuiToggleButton-root, & .MuiToggleButton-root.Mui-selected": {
+          backgroundColor: "white !important",
+        },
+      }}
+    >
       <ToggleButton
         value="automation"
         selected={state.automation}
@@ -44,10 +51,14 @@ function Controller() {
 
   if (isMobile) {
     return (
-      <Stack direction="row" spacing={3}>
-        <Joystick size={156} onChange={handleMove} />
+      <Stack
+        direction="row"
+        spacing={3}
+        sx={{ justifyContent: "space-between", alignItems: "flex-end" }}
+      >
+        <Joystick size={100} onChange={handleMove} />
         {buttons}
-        <Joystick size={156} onChange={handleCamera} />
+        <Joystick size={100} onChange={handleCamera} />
       </Stack>
     );
   }

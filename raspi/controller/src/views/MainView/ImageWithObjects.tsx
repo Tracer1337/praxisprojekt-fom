@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { ObjectDetection } from "../../lib/raspi";
-import VideoStream from "../../components/VideoStream";
+import ImageWithFallback from "../../components/ImageWithFallback";
 import BoxOverlay from "../../components/BoxOverlay";
 
 function ImageWithObjects({
@@ -12,7 +12,7 @@ function ImageWithObjects({
 }) {
   return (
     <Box sx={{ position: "relative" }}>
-      <VideoStream src={src} alt="Video Stream" />
+      <ImageWithFallback src={src} alt="Video Stream" />
       {objects.map((object, index) => (
         <Box
           key={index}

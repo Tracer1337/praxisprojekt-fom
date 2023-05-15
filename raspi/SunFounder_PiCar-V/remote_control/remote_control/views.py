@@ -68,12 +68,12 @@ def run(request):
 		elif action == 'bwready':
 			bw.ready()
 			bw_status = 0
-		elif action == 'forward':
+		elif action == 'backward': # Eigentlich Forwärts
 			bw.speed = SPEED
 			bw.forward()
 			bw_status = 1
 			debug = "speed =", SPEED
-		elif action == 'backward':
+		elif action == 'forward': # Eigentlich Rückwarts
 			bw.speed = SPEED
 			bw.backward()
 			bw_status = -1

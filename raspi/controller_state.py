@@ -69,7 +69,7 @@ class ControllerState:
   
   def get_query(self, action, value):
     if action == 'speed':
-      value = 100 if value else 40
+      value = 80 if value else 40
       return action, value
 
     return 'action', action

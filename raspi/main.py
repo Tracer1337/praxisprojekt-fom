@@ -48,6 +48,8 @@ def run_road_sign_detection():
   messages = camera_stream.listen()
   while True:
     frame = messages.get()
+    if not controller.automation:
+      continue
     detections = detect_road_signs(frame)
     road_sign_stream.announce(detections)
 

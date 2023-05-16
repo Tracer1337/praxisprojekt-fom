@@ -79,6 +79,7 @@ class ControllerState:
     self.run_sunfounder_action('bwready')
     self.run_sunfounder_action('fwready')
     self.run_sunfounder_action('camready')
+    self.run_sunfounder_action('speed', self.speed)
 
   def update(self, values):
     self.validate(values)

@@ -20,12 +20,19 @@ function useJoystickControls({
     const thumbSize = size / 2;
     const center = size / 2 - thumbSize / 2;
 
-    const startPos = { x: 0, y: 0 };
     const position = { x: 0, y: 0 };
 
     const setPosition = (x: number, y: number) => {
-      position.x = Math.max(Math.min(startPos.x + x, center), -center);
-      position.y = Math.max(Math.min(startPos.y + y, center), -center);
+      const angle = Math.atan2(y, x);
+
+      x = Math.max(Math.min(x, center), -center) / center;
+      y = (Math.max(Math.min(y, center), -center) / center) * -1;
+
+      x = Math.min(Math.abs(x), Math.abs(Math.cos(angle))) * Math.sign(x);
+      y = Math.min(Math.abs(y), Math.abs(Math.sin(angle))) * Math.sign(y);
+
+      position.x = x * center;
+      position.y = -y * center;
 
       const posX = center + position.x;
       const posY = center + position.y;

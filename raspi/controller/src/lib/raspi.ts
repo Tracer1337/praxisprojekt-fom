@@ -5,6 +5,9 @@ import {
   PropsWithChildren,
 } from "react";
 
+export const WEBCAM_WIDTH = 640;
+export const WEBCAM_HEIGHT = 480;
+
 export type ObjectDetection = {
   xmin: number;
   xmax: number;
@@ -12,6 +15,7 @@ export type ObjectDetection = {
   ymax: number;
   class: number;
   name: string;
+  confidence: number;
 };
 
 export type ControllerState = {

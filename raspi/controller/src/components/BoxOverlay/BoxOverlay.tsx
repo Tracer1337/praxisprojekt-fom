@@ -2,7 +2,15 @@ import { useRef, useEffect } from "react";
 import { Box } from "@mui/material";
 import { ObjectDetection } from "../../lib/raspi";
 
-function BoxOverlay({ box }: { box: ObjectDetection }) {
+function BoxOverlay({
+  box,
+  originalWidth,
+  originalHeight,
+}: {
+  box: ObjectDetection;
+  originalWidth: number;
+  originalHeight: number;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -18,16 +26,19 @@ function BoxOverlay({ box }: { box: ObjectDetection }) {
     context.canvas.width = canvasWidth;
     context.canvas.height = canvasHeight;
 
+    const scaleX = canvasWidth / originalWidth;
+    const scaleY = canvasHeight / originalHeight;
+
     context.strokeStyle = "lime";
     context.lineWidth = 3;
 
     context.strokeRect(
-      box.xmin,
-      box.ymin,
-      box.xmax - box.xmin,
-      box.ymax - box.ymin
+      box.xmin * scaleX,
+      box.ymin * scaleY,
+      (box.xmax - box.xmin) * scaleX,
+      (box.ymax - box.ymin) * scaleY
     );
-  }, [canvasRef, box]);
+  }, [canvasRef, box, originalWidth, originalHeight]);
 
   return (
     <Box

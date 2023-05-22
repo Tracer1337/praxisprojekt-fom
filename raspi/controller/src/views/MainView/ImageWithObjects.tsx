@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { ObjectDetection } from "../../lib/raspi";
+import { ObjectDetection, WEBCAM_HEIGHT, WEBCAM_WIDTH } from "../../lib/raspi";
 import ImageWithFallback from "../../components/ImageWithFallback";
 import BoxOverlay from "../../components/BoxOverlay";
 
@@ -12,7 +12,12 @@ function ImageWithObjects({
 }) {
   return (
     <Box sx={{ position: "relative" }}>
-      <ImageWithFallback src={src} alt="Video Stream" />
+      <ImageWithFallback
+        src={src}
+        alt="Video Stream"
+        fallbackWidth={WEBCAM_WIDTH}
+        fallbackHeight={WEBCAM_HEIGHT}
+      />
       {objects.map((object, index) => (
         <Box
           key={index}
@@ -23,7 +28,11 @@ function ImageWithObjects({
             height: "100%",
           }}
         >
-          <BoxOverlay box={object} />
+          <BoxOverlay
+            box={object}
+            originalWidth={WEBCAM_WIDTH}
+            originalHeight={WEBCAM_HEIGHT}
+          />
         </Box>
       ))}
     </Box>

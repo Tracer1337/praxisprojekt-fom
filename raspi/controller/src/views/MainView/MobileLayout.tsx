@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useRaspiConfig } from "../../lib/raspi";
+import { WEBCAM_HEIGHT, WEBCAM_WIDTH, useRaspiConfig } from "../../lib/raspi";
 import ImageWithObjects from "./ImageWithObjects";
 import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
 import Controller from "../../components/Controller";
@@ -17,55 +17,64 @@ function MobileLayout() {
         height: "100vh",
         width: "100vw",
         backgroundColor: "black",
+        position: "relative",
         display: "flex",
         justifyContent: "center",
       }}
     >
       <Box
         sx={{
-          position: "relative",
           height: "100vh",
-          aspectRatio: 4 / 3,
-          "& > .MuiBox-root:first-of-type": {
-            height: "100vh",
-            overflow: "hidden",
-            img: {
-              width: "100%",
-            },
-          },
+          aspectRatio: WEBCAM_WIDTH / WEBCAM_HEIGHT,
+          position: "relative",
         }}
       >
-        <ImageWithObjects
-          src={videoStreamUrl}
-          objects={trafficSignDetections}
-        />
+        <Box
+          sx={{
+            "& > .MuiBox-root:first-of-type": {
+              overflow: "hidden",
+              img: {
+                maxHeight: "100%",
+                maxWidth: "100%",
+              },
+            },
+          }}
+        >
+          <ImageWithObjects
+            src={videoStreamUrl}
+            objects={trafficSignDetections}
+          />
+        </Box>
         <Box
           sx={{
             position: "absolute",
             inset: 0,
+            bottom: "unset",
+            height: "40%",
             display: "flex",
-            flexDirection: "column",
             justifyContent: "space-between",
-            m: 2,
+            m: 1,
           }}
         >
-          <Box
-            sx={{
-              height: "40%",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Action />
-            <ObjectList
-              objects={trafficSignDetections}
-              getImageUrl={getTrafficSignUrl}
-            />
-          </Box>
-          <Box>
-            <Controller />
-          </Box>
+          <Action />
+          <ObjectList
+            objects={trafficSignDetections}
+            getImageUrl={getTrafficSignUrl}
+          />
         </Box>
+      </Box>
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          mx: 8,
+          my: 2,
+        }}
+      >
+        <Controller />
       </Box>
     </Box>
   );

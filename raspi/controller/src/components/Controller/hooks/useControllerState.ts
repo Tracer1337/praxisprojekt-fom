@@ -4,7 +4,11 @@ import { useWebsocket } from "../../../lib/websocket";
 
 const threshold = 0.5;
 
-function useControllerState() {
+function useControllerState({
+  update,
+}: {
+  update: (data: Partial<ControllerState>) => void;
+}) {
   const [state, setState] = useState<ControllerState>();
 
   const handleMessage = useCallback((message: WebsocketReceiveEvent) => {
@@ -13,63 +17,52 @@ function useControllerState() {
     }
   }, []);
 
-  const { ready, send } = useWebsocket(handleMessage);
-
-  const sendControllerUpdate = useCallback(
-    (data: Partial<ControllerState>) => {
-      if (!ready) {
-        return;
-      }
-      send({ event: "controller.update", data });
-    },
-    [ready, send]
-  );
+  useWebsocket(handleMessage);
 
   const handleMove = useCallback(
     ({ x, y }: { x: number; y: number }) => {
-      sendControllerUpdate({
+      update({
         forward: y > threshold,
         backward: y < -threshold,
         left: x < -threshold,
         right: x > threshold,
       });
     },
-    [sendControllerUpdate]
+    [update]
   );
 
   const handleCamera = useCallback(
     ({ x, y }: { x: number; y: number }) => {
-      sendControllerUpdate({
+      update({
         cameraUp: y > threshold,
         cameraDown: y < -threshold,
         cameraLeft: x < -threshold,
         cameraRight: x > threshold,
       });
     },
-    [sendControllerUpdate]
+    [update]
   );
 
   const setAutomation = useCallback(
     (value: boolean) => {
-      sendControllerUpdate({
+      update({
         automation: value,
       });
     },
-    [sendControllerUpdate]
+    [update]
   );
 
   const setSpeed = useCallback(
     (value: boolean) => {
-      sendControllerUpdate({
+      update({
         speed: value,
       });
     },
-    [sendControllerUpdate]
+    [update]
   );
 
   return {
     state,
-    sendControllerUpdate,
     handleMove,
     handleCamera,
     setAutomation,

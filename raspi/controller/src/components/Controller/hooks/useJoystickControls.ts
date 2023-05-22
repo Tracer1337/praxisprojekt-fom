@@ -4,9 +4,11 @@ import Hammer from "hammerjs";
 function useJoystickControls({
   size,
   onChange,
+  throttle,
 }: {
   size: number;
   onChange: (data: { x: number; y: number }) => void;
+  throttle?: number;
 }) {
   const thumbRef = useRef<HTMLDivElement>();
 
@@ -21,6 +23,25 @@ function useJoystickControls({
     const center = size / 2 - thumbSize / 2;
 
     const position = { x: 0, y: 0 };
+
+    let lastTime = performance.now();
+
+    const isThrottled = () => {
+      if (!throttle) {
+        return false;
+      }
+
+      const currentTime = performance.now();
+      const elapsed = currentTime - lastTime;
+
+      if (elapsed < throttle) {
+        return true;
+      }
+
+      lastTime = currentTime;
+
+      return false;
+    };
 
     const setPosition = (x: number, y: number) => {
       const angle = Math.atan2(y, x);
@@ -39,10 +60,12 @@ function useJoystickControls({
 
       thumb.style.transform = `translate(${posX}px, ${posY}px)`;
 
-      onChange({
-        x: position.x / center,
-        y: -position.y / center,
-      });
+      if (!isThrottled()) {
+        onChange({
+          x: position.x / center,
+          y: -position.y / center,
+        });
+      }
     };
 
     const gestures = new Hammer(thumb);
@@ -62,7 +85,7 @@ function useJoystickControls({
     return () => {
       gestures.destroy();
     };
-  }, [size, onChange]);
+  }, [size, onChange, throttle]);
 
   return { thumbRef };
 }

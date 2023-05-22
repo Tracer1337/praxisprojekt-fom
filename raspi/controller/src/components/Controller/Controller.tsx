@@ -5,18 +5,15 @@ import MemoryIcon from "@mui/icons-material/Memory";
 import SpeedIcon from "@mui/icons-material/Speed";
 import { isMobile } from "../../lib/responsive";
 import useKeyboardControls from "./hooks/useKeyboardControls";
+import useControllerUpdate from "./hooks/useControllerUpdate";
 
 function Controller() {
-  const {
-    state,
-    sendControllerUpdate,
-    handleMove,
-    handleCamera,
-    setAutomation,
-    setSpeed,
-  } = useControllerState();
+  const update = useControllerUpdate();
 
-  useKeyboardControls({ state, update: sendControllerUpdate });
+  const { state, handleMove, handleCamera, setAutomation, setSpeed } =
+    useControllerState({ update });
+
+  useKeyboardControls({ state, update });
 
   if (!state) {
     return <CircularProgress />;
@@ -56,9 +53,9 @@ function Controller() {
         spacing={3}
         sx={{ justifyContent: "space-between", alignItems: "flex-end" }}
       >
-        <Joystick size={130} onChange={handleMove} />
+        <Joystick size={130} throttle={100} onChange={handleMove} />
         {buttons}
-        <Joystick size={130} onChange={handleCamera} />
+        <Joystick size={130} throttle={100} onChange={handleCamera} />
       </Stack>
     );
   }

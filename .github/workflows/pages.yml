@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy dataset-visualization to Pages
+name: Deploy gui to Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -22,7 +22,7 @@ concurrency:
 
 defaults:
   run:
-    working-directory: ./dataset-visualization  
+    working-directory: ./gui
 
 jobs:
   # Single deploy job since we're just deploying
@@ -39,7 +39,7 @@ jobs:
         with:
           node-version: 18
           cache: 'yarn'
-          cache-dependency-path: 'dataset-visualization/yarn.lock'
+          cache-dependency-path: 'gui/yarn.lock'
       - name: Install dependencies
         run: yarn install
       - name: Build
@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload dist repository
-          path: './dataset-visualization/dist'
+          path: './gui/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1

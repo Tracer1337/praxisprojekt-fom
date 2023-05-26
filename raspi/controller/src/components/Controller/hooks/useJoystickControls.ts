@@ -43,7 +43,7 @@ function useJoystickControls({
       return false;
     };
 
-    const setPosition = (x: number, y: number) => {
+    const setPosition = (x: number, y: number, shouldThrottle = true) => {
       const angle = Math.atan2(y, x);
 
       x = Math.max(Math.min(x, center), -center) / center;
@@ -60,7 +60,7 @@ function useJoystickControls({
 
       thumb.style.transform = `translate(${posX}px, ${posY}px)`;
 
-      if (!isThrottled()) {
+      if (!shouldThrottle || !isThrottled()) {
         onChange({
           x: position.x / center,
           y: -position.y / center,
@@ -77,10 +77,10 @@ function useJoystickControls({
     });
 
     gestures.on("panend", () => {
-      setPosition(0, 0);
+      setPosition(0, 0, false);
     });
 
-    setPosition(0, 0);
+    setPosition(0, 0, false);
 
     return () => {
       gestures.destroy();

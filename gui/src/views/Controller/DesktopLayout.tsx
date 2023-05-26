@@ -4,7 +4,7 @@ import Controller from "../../components/Controller";
 import Action from "../../components/Action";
 import { useRaspiConfig } from "../../lib/raspi";
 import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
-import ImageWithObjects from "../../components/ImageWithObjects/ImageWithObjects";
+import ImageWithObjects from "../../components/ImageWithObjects";
 
 function DesktopLayout() {
   const { videoStreamUrl, getTrafficSignUrl } = useRaspiConfig();

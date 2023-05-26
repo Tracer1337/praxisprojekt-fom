@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { getGTSDBImageUrl } from "../../../lib/gh-content";
 import { useAnnotationData } from "./hooks/useAnnotationData";
-import ImageWithObjects from "../../../components/ImageWithObjects/ImageWithObjects";
+import Canvas from "../../../components/Canvas";
 
 function GTSDB() {
   const [imageNumber, setImageNumber] = useState(0);
@@ -55,7 +55,7 @@ function GTSDB() {
           )}
         </Grid>
         <Grid item xs={8}>
-          <ImageWithObjects
+          <Canvas
             src={getGTSDBImageUrl(imageNumber)}
             objects={toObjectDetections(
               getAnnotationsForImageNumber(imageNumber) ?? []

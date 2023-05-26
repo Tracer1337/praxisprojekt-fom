@@ -40,7 +40,7 @@ export function useAnnotationData() {
   }, []);
 
   return {
-    isLoading: !!data,
+    isLoading: !data,
     getAnnotationsForImageNumber,
     toObjectDetections,
   };

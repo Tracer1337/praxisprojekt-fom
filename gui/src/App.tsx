@@ -11,11 +11,11 @@ import DatasetView from "./views/Dataset/DatasetView";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/praxisprojekt-fom",
     element: <Layout />,
     children: [
       {
-        element: <Navigate to="/controller/custom" />,
+        element: <Navigate to="/praxisprojekt-fom/controller/custom" />,
         index: true,
       },
       {

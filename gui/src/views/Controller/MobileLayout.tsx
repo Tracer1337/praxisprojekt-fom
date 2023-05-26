@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { WEBCAM_HEIGHT, WEBCAM_WIDTH, useRaspiConfig } from "../../lib/raspi";
-import ImageWithObjects from "../../components/ImageWithObjects/ImageWithObjects";
+import ImageWithObjects from "../../components/ImageWithObjects";
 import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
 import Controller from "../../components/Controller";
 import ObjectList from "../../components/ObjectList";

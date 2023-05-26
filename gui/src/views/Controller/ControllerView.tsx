@@ -42,7 +42,7 @@ function ControllerView() {
 
   return (
     <RaspiContextProvider host={raspiHost}>
-      <Box sx={{ mt: 2 }}>
+      <Box>
         <Tabs value={tab} onChange={handleChange} centered sx={{ mb: 2 }}>
           <Tab label="Custom" />
           <Tab label="SunFounder" />

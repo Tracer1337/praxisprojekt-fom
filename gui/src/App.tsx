@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import ControllerView from "./views/Controller/ControllerView";
 import CustomController from "./views/Controller/CustomController";
 import SunFounderController from "./views/Controller/SunFounderController";
+import DatasetView from "./views/Dataset/DatasetView";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
             element: <SunFounderController />,
           },
         ],
+      },
+      {
+        path: "dataset",
+        element: <DatasetView />,
       },
     ],
   },

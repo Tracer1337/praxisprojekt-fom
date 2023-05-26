@@ -1,11 +1,10 @@
 import { Box, Paper } from "@mui/material";
-import Header from "../../components/Header";
 import ObjectList from "../../components/ObjectList";
 import Controller from "../../components/Controller";
 import Action from "../../components/Action";
 import { useRaspiConfig } from "../../lib/raspi";
 import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
-import ImageWithObjects from "./ImageWithObjects";
+import ImageWithObjects from "../../components/ImageWithObjects/ImageWithObjects";
 
 function DesktopLayout() {
   const { videoStreamUrl, getTrafficSignUrl } = useRaspiConfig();
@@ -14,9 +13,6 @@ function DesktopLayout() {
 
   return (
     <>
-      <Box sx={{ mb: 4 }}>
-        <Header />
-      </Box>
       <Box
         sx={{
           display: "grid",

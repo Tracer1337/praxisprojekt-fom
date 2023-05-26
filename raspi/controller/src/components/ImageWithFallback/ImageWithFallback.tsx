@@ -24,7 +24,13 @@ function ImageWithFallback({
       variant="outlined"
     />
   ) : (
-    <Box component="img" src={src} alt={alt} onError={() => setError(true)} />
+    <Box
+      component="img"
+      src={src}
+      alt={alt}
+      onError={() => setError(true)}
+      sx={{ display: "block" }}
+    />
   );
 }
 

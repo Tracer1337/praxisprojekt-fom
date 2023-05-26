@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { ObjectDetection, WEBCAM_HEIGHT, WEBCAM_WIDTH } from "../../lib/raspi";
-import ImageWithFallback from "../../components/ImageWithFallback";
-import BoxOverlay from "../../components/BoxOverlay";
+import ImageWithFallback from "../ImageWithFallback";
+import BoxOverlay from "../BoxOverlay";
 
 function ImageWithObjects({
   src,

@@ -30,12 +30,9 @@ export function WebsocketContextProvider({
     [websocket]
   );
 
-  useEffect(() => {
-    setWebsocket((websocket) => {
-      websocket?.close();
-      return new WebSocket(url);
-    });
-  }, [setWebsocket, url]);
+  useEffect(() => setWebsocket(new WebSocket(url)), [setWebsocket, url]);
+
+  useEffect(() => () => websocket?.close(), [websocket]);
 
   useEffect(() => {
     if (!websocket) {

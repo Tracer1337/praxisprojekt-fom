@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, Button } from "@mui/material";
+import { AppBar, Toolbar, Typography } from "@mui/material";
 
 function Header() {
   return (
@@ -7,9 +7,6 @@ function Header() {
         <Typography sx={{ flexGrow: 1 }}>
           Praxisprojekt - Entwicklung eines Fahrassistenzsystems
         </Typography>
-        <Button color="inherit" size="small" href="/">
-          Zum SunFounder Frontend
-        </Button>
       </Toolbar>
     </AppBar>
   );

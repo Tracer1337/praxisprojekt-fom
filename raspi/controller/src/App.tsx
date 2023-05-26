@@ -1,41 +1,42 @@
-import { useState } from "react";
-import { Box, Paper, Typography } from "@mui/material";
-import { WebsocketContextProvider } from "./lib/websocket.ts";
-import { RaspiContextProvider, getRaspiConfig } from "./lib/raspi.ts";
-import RaspiConfigForm from "./components/RaspiConfigForm/RaspiConfigForm.tsx";
-import MainView from "./views/MainView/MainView.tsx";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
+import Layout from "./components/Layout";
+import ControllerView from "./views/Controller/ControllerView";
+import CustomController from "./views/Controller/CustomController";
+import SunFounderController from "./views/Controller/SunFounderController";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        element: <Navigate to="/controller/custom" />,
+        index: true,
+      },
+      {
+        path: "controller",
+        element: <ControllerView />,
+        children: [
+          {
+            path: "custom",
+            element: <CustomController />,
+          },
+          {
+            path: "sunfounder",
+            element: <SunFounderController />,
+          },
+        ],
+      },
+    ],
+  },
+]);
 
 function App() {
-  const [raspiHost, setRaspiHost] = useState<string>();
-
-  if (!raspiHost) {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Paper variant="outlined" sx={{ width: 500, p: 4 }}>
-          <Typography variant="h6" sx={{ mb: 3 }}>
-            Raspberry-Pi Controller
-          </Typography>
-          <RaspiConfigForm onSubmit={(data) => setRaspiHost(data.host)} />
-        </Paper>
-      </Box>
-    );
-  }
-
-  return (
-    <RaspiContextProvider host={raspiHost}>
-      <WebsocketContextProvider url={getRaspiConfig(raspiHost).websocketUrl}>
-        <MainView />
-      </WebsocketContextProvider>
-    </RaspiContextProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

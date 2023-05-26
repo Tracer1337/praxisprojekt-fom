@@ -48,6 +48,7 @@ export type WebsocketReceiveEvent =
 
 export function getRaspiConfig(host: string) {
   const httpUrl = `http://${host}:9000`;
+  const sunfounderUrl = `http://${host}:8000`;
   const websocketUrl = `ws://${host}:9001`;
 
   const healtchCheckUrl = `${httpUrl}/health-check`;
@@ -57,6 +58,7 @@ export function getRaspiConfig(host: string) {
     `${httpUrl}/traffic-sign/${objectId}`;
 
   return {
+    sunfounderUrl,
     websocketUrl,
     healtchCheckUrl,
     videoStreamUrl,

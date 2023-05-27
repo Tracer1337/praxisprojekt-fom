@@ -22,15 +22,11 @@ function Sidebar() {
       <Divider />
       <List>
         <ListLink
-          to="/praxisprojekt-fom/controller/custom"
+          to="/controller/custom"
           label="Controller"
           icon={<GamepadIcon />}
         />
-        <ListLink
-          to="/praxisprojekt-fom/dataset"
-          label="Datensatz"
-          icon={<ImageIcon />}
-        />
+        <ListLink to="/dataset" label="Datensatz" icon={<ImageIcon />} />
       </List>
     </Drawer>
   );

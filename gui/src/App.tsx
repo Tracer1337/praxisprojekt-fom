@@ -1,21 +1,17 @@
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { createHashRouter, Navigate, RouterProvider } from "react-router-dom";
 import Layout from "./components/Layout";
 import ControllerView from "./views/Controller/ControllerView";
 import CustomController from "./views/Controller/CustomController";
 import SunFounderController from "./views/Controller/SunFounderController";
 import DatasetView from "./views/Dataset/DatasetView";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
-    path: "/praxisprojekt-fom",
+    path: "/",
     element: <Layout />,
     children: [
       {
-        element: <Navigate to="/praxisprojekt-fom/controller/custom" />,
+        element: <Navigate to="/controller/custom" />,
         index: true,
       },
       {

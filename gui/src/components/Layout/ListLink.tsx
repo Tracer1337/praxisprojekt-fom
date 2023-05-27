@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
-import { useMatch, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  useTheme,
 } from "@mui/material";
 
 function ListLink({
@@ -16,19 +17,24 @@ function ListLink({
   label: string;
   icon: ReactNode;
 }) {
-  const navigate = useNavigate();
-  const isActive = useMatch(to);
+  const theme = useTheme();
 
   return (
-    <ListItem
-      disablePadding
-      sx={{ backgroundColor: isActive ? "#cacaca" : null }}
+    <NavLink
+      to={to}
+      style={({ isActive }) => ({
+        backgroundColor: isActive ? theme.palette.grey[300] : "unset",
+        textDecoration: "none",
+        display: "block",
+      })}
     >
-      <ListItemButton onClick={() => navigate(to)}>
-        <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={label} />
-      </ListItemButton>
-    </ListItem>
+      <ListItem disablePadding sx={{ color: "initial" }}>
+        <ListItemButton>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText primary={label} />
+        </ListItemButton>
+      </ListItem>
+    </NavLink>
   );
 }
 

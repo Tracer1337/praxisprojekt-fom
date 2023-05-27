@@ -1,5 +1,5 @@
 import { Tabs, Tab, Box, Paper, Typography } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useOutlet } from "react-router-dom";
 import { useState } from "react";
 import useTabs from "./hooks/useTabs";
 import RaspiConfigForm from "../../components/RaspiConfigForm";
@@ -9,7 +9,13 @@ import { isMobile } from "../../lib/responsive";
 function ControllerView() {
   const { tab, handleChange } = useTabs(["custom", "sunfounder"]);
 
+  const outlet = useOutlet();
+
   const [raspiHost, setRaspiHost] = useState<string>();
+
+  if (!outlet) {
+    return <Navigate to="/controller/custom" replace={true} />;
+  }
 
   if (!raspiHost) {
     return (

@@ -21,11 +21,7 @@ function Sidebar() {
       <Toolbar />
       <Divider />
       <List>
-        <ListLink
-          to="/controller/custom"
-          label="Controller"
-          icon={<GamepadIcon />}
-        />
+        <ListLink to="/controller" label="Controller" icon={<GamepadIcon />} />
         <ListLink to="/dataset" label="Datensatz" icon={<ImageIcon />} />
       </List>
     </Drawer>

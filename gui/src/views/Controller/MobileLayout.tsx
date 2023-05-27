@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { WEBCAM_HEIGHT, WEBCAM_WIDTH, useRaspiConfig } from "../../lib/raspi";
-import ImageWithObjects from "../../components/ImageWithObjects";
+import Vision from "../../components/Vision";
 import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
 import Controller from "../../components/Controller";
 import ObjectList from "../../components/ObjectList";
@@ -40,9 +40,10 @@ function MobileLayout() {
             },
           }}
         >
-          <ImageWithObjects
+          <Vision
             src={videoStreamUrl}
             objects={trafficSignDetections}
+            sx={{ maxWidth: "100%", maxHeight: "100%" }}
           />
         </Box>
         <Box

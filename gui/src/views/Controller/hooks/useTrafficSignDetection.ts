@@ -10,6 +10,10 @@ function useTrafficSignDetection() {
       if (message.event === "traffic-sign.detections") {
         setObjects(message.data);
       }
+
+      if (message.event === "controller.state" && !message.data.automation) {
+        setObjects([]);
+      }
     },
     [setObjects]
   );

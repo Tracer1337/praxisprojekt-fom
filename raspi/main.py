@@ -51,6 +51,8 @@ def run_road_sign_detection():
     if not controller.automation:
       continue
     detections = detect_road_signs(frame)
+    if not controller.automation:
+      continue
     road_sign_stream.announce(detections)
 
 def run_camera_capture():

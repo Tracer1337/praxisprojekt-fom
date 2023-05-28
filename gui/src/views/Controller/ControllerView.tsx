@@ -1,17 +1,17 @@
 import { Tabs, Tab, Box, Paper, Typography, Button } from "@mui/material";
 import { Navigate, Outlet, useOutlet } from "react-router-dom";
-import { useState } from "react";
 import useTabs from "./hooks/useTabs";
 import RaspiConfigForm from "../../components/RaspiConfigForm";
 import { RaspiContextProvider } from "../../lib/raspi";
 import { isMobile } from "../../lib/responsive";
+import { StorageKeys, useStoredVariable } from "../../lib/persistance";
 
 function ControllerView() {
   const { tab, handleChange } = useTabs(["custom", "sunfounder"]);
 
   const outlet = useOutlet();
 
-  const [raspiHost, setRaspiHost] = useState<string | null>(null);
+  const [raspiHost, setRaspiHost] = useStoredVariable(StorageKeys.RASPI_HOST);
 
   if (!outlet) {
     return <Navigate to="/controller/custom" replace={true} />;
@@ -57,13 +57,20 @@ function ControllerView() {
           }}
         >
           <Box>
-            <Button
-              variant="outlined"
-              color="error"
+            <Typography variant="caption" sx={{ display: "block" }}>
+              Verbunden mit: {raspiHost}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                color: "error.main",
+                cursor: "pointer",
+                textTransform: "uppercase",
+              }}
               onClick={() => setRaspiHost(null)}
             >
               Verbindung trennen
-            </Button>
+            </Typography>
           </Box>
           <Tabs value={tab} onChange={handleChange} centered sx={{ mb: 2 }}>
             <Tab label="Custom" />

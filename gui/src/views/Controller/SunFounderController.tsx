@@ -10,7 +10,12 @@ function SunFounderController() {
         <Box
           component="iframe"
           src={raspi.sunfounderUrl}
-          sx={{ width: "100%", height: "calc(100vh - 200px)", border: "none" }}
+          sx={{
+            display: "block",
+            width: "100%",
+            height: "calc(100vh - 200px)",
+            border: "none",
+          }}
         />
       </Paper>
     </Container>

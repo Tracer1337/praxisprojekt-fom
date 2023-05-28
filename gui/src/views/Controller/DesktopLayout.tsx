@@ -5,6 +5,7 @@ import Action from "../../components/Action";
 import { useRaspiConfig } from "../../lib/raspi";
 import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
 import Vision from "../../components/Vision";
+import ControllerDescriptionImage from "../../assets/controller_description.svg";
 
 function DesktopLayout() {
   const { videoStreamUrl, getTrafficSignUrl } = useRaspiConfig();
@@ -21,7 +22,12 @@ function DesktopLayout() {
           mb: 4,
         }}
       >
-        <Box sx={{ gridColumn: 2 }}>
+        <Box
+          component="img"
+          src={ControllerDescriptionImage}
+          sx={{ width: "100%", maxWidth: 400, justifySelf: "flex-end" }}
+        />
+        <Box>
           <Paper
             sx={{ display: "flex", justifyContent: "center" }}
             variant="outlined"
@@ -29,7 +35,7 @@ function DesktopLayout() {
             <Vision src={videoStreamUrl} objects={trafficSignDetections} />
           </Paper>
         </Box>
-        <Box sx={{ gridColumn: 3, ml: 2 }}>
+        <Box sx={{ ml: 2 }}>
           <ObjectList
             objects={trafficSignDetections}
             getImageUrl={getTrafficSignUrl}

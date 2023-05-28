@@ -1,4 +1,4 @@
-import { Tabs, Tab, Box, Paper, Typography } from "@mui/material";
+import { Tabs, Tab, Box, Paper, Typography, Button } from "@mui/material";
 import { Navigate, Outlet, useOutlet } from "react-router-dom";
 import { useState } from "react";
 import useTabs from "./hooks/useTabs";
@@ -11,7 +11,7 @@ function ControllerView() {
 
   const outlet = useOutlet();
 
-  const [raspiHost, setRaspiHost] = useState<string>();
+  const [raspiHost, setRaspiHost] = useState<string | null>(null);
 
   if (!outlet) {
     return <Navigate to="/controller/custom" replace={true} />;
@@ -49,10 +49,27 @@ function ControllerView() {
   return (
     <RaspiContextProvider host={raspiHost}>
       <Box>
-        <Tabs value={tab} onChange={handleChange} centered sx={{ mb: 2 }}>
-          <Tab label="Custom" />
-          <Tab label="SunFounder" />
-        </Tabs>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "1fr auto 1fr",
+            gridTemplateRows: "auto",
+          }}
+        >
+          <Box>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => setRaspiHost(null)}
+            >
+              Verbindung trennen
+            </Button>
+          </Box>
+          <Tabs value={tab} onChange={handleChange} centered sx={{ mb: 2 }}>
+            <Tab label="Custom" />
+            <Tab label="SunFounder" />
+          </Tabs>
+        </Box>
         <Outlet />
       </Box>
     </RaspiContextProvider>

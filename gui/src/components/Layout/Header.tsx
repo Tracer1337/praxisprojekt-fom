@@ -1,4 +1,5 @@
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import { DRAWER_WIDTH } from "./constants";
 
 function Header() {
@@ -11,9 +12,14 @@ function Header() {
       }}
     >
       <Toolbar>
-        <Typography variant="h6" noWrap component="div">
+        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
           Praxisprojekt - Entwicklung eines Fahrassistenzsystems
         </Typography>
+        <a href="https://github.com/Tracer1337/praxisprojekt-fom">
+          <IconButton sx={{ color: "white" }}>
+            <GitHubIcon />
+          </IconButton>
+        </a>
       </Toolbar>
     </AppBar>
   );

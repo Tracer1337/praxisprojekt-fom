@@ -1,4 +1,4 @@
-import { Tabs, Tab, Box, Paper, Typography, Button } from "@mui/material";
+import { Tabs, Tab, Box, Paper, Typography } from "@mui/material";
 import { Navigate, Outlet, useOutlet } from "react-router-dom";
 import useTabs from "./hooks/useTabs";
 import RaspiConfigForm from "../../components/RaspiConfigForm";

@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
-import { WEBCAM_HEIGHT, WEBCAM_WIDTH, useRaspiConfig } from "../../lib/raspi";
+import { Box, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { WEBCAM_HEIGHT, WEBCAM_WIDTH, useRaspi } from "../../lib/raspi";
 import Vision from "../../components/Vision";
 import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
 import Controller from "../../components/Controller";
@@ -7,7 +8,9 @@ import ObjectList from "../../components/ObjectList";
 import Action from "../../components/Action";
 
 function MobileLayout() {
-  const { videoStreamUrl, getTrafficSignUrl } = useRaspiConfig();
+  const raspi = useRaspi();
+
+  const { videoStreamUrl, getTrafficSignUrl } = raspi.config();
 
   const trafficSignDetections = useTrafficSignDetection();
 
@@ -70,12 +73,20 @@ function MobileLayout() {
           inset: 0,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-end",
-          mx: 8,
-          my: 2,
+          justifyContent: "space-between",
         }}
       >
-        <Controller />
+        <Box sx={{ m: 1, display: "flex", justifyContent: "flex-end" }}>
+          <IconButton
+            sx={{ color: "white" }}
+            onClick={() => raspi.setHost(null)}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <Box sx={{ mx: 8, my: 2 }}>
+          <Controller />
+        </Box>
       </Box>
     </Box>
   );

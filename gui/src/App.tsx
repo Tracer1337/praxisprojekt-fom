@@ -4,6 +4,7 @@ import ControllerView from "./views/Controller/ControllerView";
 import CustomController from "./views/Controller/CustomController";
 import SunFounderController from "./views/Controller/SunFounderController";
 import DatasetView from "./views/Dataset/DatasetView";
+import { RaspiContextProvider } from "./lib/raspi";
 
 const router = createHashRouter([
   {
@@ -16,7 +17,11 @@ const router = createHashRouter([
       },
       {
         path: "controller",
-        element: <ControllerView />,
+        element: (
+          <RaspiContextProvider>
+            <ControllerView />
+          </RaspiContextProvider>
+        ),
         children: [
           {
             path: "custom",

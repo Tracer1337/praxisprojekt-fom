@@ -4,6 +4,7 @@ import {
   useContext,
   PropsWithChildren,
 } from "react";
+import { useStoredVariable, StorageKeys } from "./persistance";
 
 export const WEBCAM_WIDTH = 640;
 export const WEBCAM_HEIGHT = 480;
@@ -66,25 +67,36 @@ export function getRaspiConfig(host: string) {
   };
 }
 
-const RaspiContext = createContext<{ host: string } | null>(null);
+const RaspiContext = createContext<{
+  host: string | null;
+  setHost: (host: string | null) => void;
+  config: () => ReturnType<typeof getRaspiConfig>;
+} | null>(null);
 
-export function RaspiContextProvider({
-  host,
-  children,
-}: PropsWithChildren<{ host: string }>) {
-  if (!host) {
-    return null;
-  }
+export function RaspiContextProvider({ children }: PropsWithChildren) {
+  const [host, setHost] = useStoredVariable(StorageKeys.RASPI_HOST);
 
-  return createElement(RaspiContext.Provider, { value: { host } }, children);
+  const config = () => {
+    if (!host) {
+      throw new Error("Missing host for raspberry-pi");
+    }
+
+    return getRaspiConfig(host);
+  };
+
+  return createElement(
+    RaspiContext.Provider,
+    { value: { host, setHost, config } },
+    children
+  );
 }
 
-export function useRaspiConfig() {
+export function useRaspi() {
   const context = useContext(RaspiContext);
 
   if (!context) {
     throw new Error("Cannot use context outside provider");
   }
 
-  return getRaspiConfig(context.host);
+  return context;
 }

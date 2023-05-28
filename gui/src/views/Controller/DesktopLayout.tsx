@@ -2,13 +2,13 @@ import { Box, Paper } from "@mui/material";
 import ObjectList from "../../components/ObjectList";
 import Controller from "../../components/Controller";
 import Action from "../../components/Action";
-import { useRaspiConfig } from "../../lib/raspi";
+import { useRaspi } from "../../lib/raspi";
 import useTrafficSignDetection from "./hooks/useTrafficSignDetection";
 import Vision from "../../components/Vision";
 import ControllerDescriptionImage from "../../assets/controller_description.svg";
 
 function DesktopLayout() {
-  const { videoStreamUrl, getTrafficSignUrl } = useRaspiConfig();
+  const { videoStreamUrl, getTrafficSignUrl } = useRaspi().config();
 
   const trafficSignDetections = useTrafficSignDetection();
 

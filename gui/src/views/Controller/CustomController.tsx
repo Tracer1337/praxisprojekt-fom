@@ -1,11 +1,11 @@
 import { isMobile } from "../../lib/responsive";
 import DesktopLayout from "./DesktopLayout";
 import MobileLayout from "./MobileLayout";
-import { useRaspiConfig } from "../../lib/raspi";
+import { useRaspi } from "../../lib/raspi";
 import { WebsocketContextProvider } from "../../lib/websocket";
 
 function CustomController() {
-  const raspi = useRaspiConfig();
+  const raspi = useRaspi().config();
 
   return (
     <WebsocketContextProvider url={raspi.websocketUrl}>

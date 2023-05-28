@@ -1,8 +1,8 @@
 import { Box, Paper, Container } from "@mui/material";
-import { useRaspiConfig } from "../../lib/raspi";
+import { useRaspi } from "../../lib/raspi";
 
 function SunFounderController() {
-  const raspi = useRaspiConfig();
+  const raspi = useRaspi().config();
 
   return (
     <Container maxWidth="xl">

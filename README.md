@@ -51,7 +51,7 @@
 3. Datei `.env.example` nach `.env` kopieren
 4. Fehlende Werte in der Datei `.env` ergänzen
 5. Folgenden Befehl ausführen: `pip3 install -r requirements.txt`
-6. In neuem Terminal in das Verzeichnis `SunFounder_PiCar-V/remote_control` navigieren
+6. Im neuem Terminal in das Verzeichnis `SunFounder_PiCar-V/remote_control` navigieren
 7. Folgenden Befehl ausführen: `./start`
 8. Folgenden Befehl im urspünglichen Terminal ausführen: `python3 main.py`
 

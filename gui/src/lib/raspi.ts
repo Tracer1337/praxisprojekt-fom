@@ -32,6 +32,15 @@ export type ControllerState = {
   automation: boolean;
 };
 
+export type SystemStatus = {
+  cpu_usage: number;
+  cpu_thermal?: {
+    current: number;
+    high: boolean;
+    critical: boolean;
+  };
+};
+
 export type WebsocketSendEvent = {
   event: "controller.update";
   data: Partial<ControllerState>;
@@ -45,6 +54,10 @@ export type WebsocketReceiveEvent =
   | {
       event: "traffic-sign.detections";
       data: ObjectDetection[];
+    }
+  | {
+      event: "system.status";
+      data: SystemStatus;
     };
 
 export function getRaspiConfig(host: string) {

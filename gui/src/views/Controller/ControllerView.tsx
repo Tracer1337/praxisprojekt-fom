@@ -4,6 +4,8 @@ import useTabs from "./hooks/useTabs";
 import RaspiConfigForm from "../../components/RaspiConfigForm";
 import { useRaspi } from "../../lib/raspi";
 import { isMobile } from "../../lib/responsive";
+import ConnectionStatus from "./ConnectionStatus";
+import { WebsocketContextProvider } from "../../lib/websocket";
 
 function ControllerView() {
   const { tab, handleChange } = useTabs(["custom", "sunfounder"]);
@@ -42,37 +44,24 @@ function ControllerView() {
   }
 
   return (
-    <Box>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "1fr auto 1fr",
-          gridTemplateRows: "auto",
-        }}
-      >
-        <Box>
-          <Typography variant="caption" sx={{ display: "block" }}>
-            Verbunden mit: {raspi.host}
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={{
-              color: "error.main",
-              cursor: "pointer",
-              textTransform: "uppercase",
-            }}
-            onClick={() => raspi.setHost(null)}
-          >
-            Verbindung trennen
-          </Typography>
+    <WebsocketContextProvider url={raspi.config().websocketUrl}>
+      <Box>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "1fr auto 1fr",
+            gridTemplateRows: "auto",
+          }}
+        >
+          <ConnectionStatus />
+          <Tabs value={tab} onChange={handleChange} centered sx={{ mb: 2 }}>
+            <Tab label="Custom" />
+            <Tab label="SunFounder" />
+          </Tabs>
         </Box>
-        <Tabs value={tab} onChange={handleChange} centered sx={{ mb: 2 }}>
-          <Tab label="Custom" />
-          <Tab label="SunFounder" />
-        </Tabs>
+        <Outlet />
       </Box>
-      <Outlet />
-    </Box>
+    </WebsocketContextProvider>
   );
 }
 

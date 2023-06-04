@@ -1,4 +1,4 @@
-import { Tabs, Tab, Box, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { Navigate, Outlet, useOutlet } from "react-router-dom";
 import useTabs from "./hooks/useTabs";
 import RaspiConfigForm from "../../components/RaspiConfigForm";
@@ -6,6 +6,7 @@ import { useRaspi } from "../../lib/raspi";
 import { isMobile } from "../../lib/responsive";
 import ConnectionStatus from "./ConnectionStatus";
 import { WebsocketContextProvider } from "../../lib/websocket";
+import ControllerTabs from "./ControllerTabs";
 
 function ControllerView() {
   const { tab, handleChange } = useTabs(["custom", "sunfounder"]);
@@ -54,10 +55,7 @@ function ControllerView() {
           }}
         >
           <ConnectionStatus />
-          <Tabs value={tab} onChange={handleChange} centered sx={{ mb: 2 }}>
-            <Tab label="Custom" />
-            <Tab label="SunFounder" />
-          </Tabs>
+          <ControllerTabs tab={tab} onChange={handleChange} />
         </Box>
         <Outlet />
       </Box>

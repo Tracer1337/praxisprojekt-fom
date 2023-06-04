@@ -3,6 +3,8 @@ from threading import Condition
 
 class ControllerState:
   actions = {
+    'sunfounder_available': { 'type': bool },
+    'road_sign_detection_available': { 'type': bool },
     'forward': {
       'type': bool,
       'mapping': ('forward', 'stop'),
@@ -41,7 +43,8 @@ class ControllerState:
 
   def __init__(self, sunfounder_port):
     self.sunfounder_port = sunfounder_port
-    self.available = True
+    self.sunfounder_available = True
+    self.road_sign_detection_available = True
 
     self.forward = False
     self.backward = False
@@ -59,14 +62,13 @@ class ControllerState:
     self.cv = Condition()
 
   def run_sunfounder_action(self, action, value=None):
-    if not self.available:
-      return
     action, value = self.get_query(action, value)
     try:
       requests.get(f'http://localhost:{self.sunfounder_port}/run/?{action}={value}')
+      self.update({ 'sunfounder_available': True })
     except:
-      self.available = False
-  
+      self.update({ 'sunfounder_available': False })
+
   def get_query(self, action, value):
     if action == 'speed':
       value = 80 if value else 40
@@ -85,6 +87,9 @@ class ControllerState:
     self.validate(values)
 
     diff = self.diff(values)
+
+    self.sunfounder_available = values.get('sunfounder_available', self.sunfounder_available)
+    self.road_sign_detection_available = values.get('road_sign_detection_available', self.road_sign_detection_available)
 
     self.forward = values.get('forward', self.forward)
     self.backward = values.get('backward', self.backward)
@@ -130,7 +135,8 @@ class ControllerState:
 
   def __dict__(self):
     return {
-      'available': self.available,
+      'sunfounderAvailable': self.sunfounder_available,
+      'roadSignDetectionAvailable': self.road_sign_detection_available,
 
       'forward': self.forward,
       'backward': self.backward,

@@ -7,8 +7,8 @@ const threshold = 0.5;
 function useControllerState({
   update,
 }: {
-  update: (data: Partial<ControllerState>) => void;
-}) {
+  update?: (data: Partial<ControllerState>) => void;
+} = {}) {
   const [state, setState] = useState<ControllerState>();
 
   const handleMessage = useCallback((message: WebsocketReceiveEvent) => {
@@ -21,7 +21,7 @@ function useControllerState({
 
   const handleMove = useCallback(
     ({ x, y }: { x: number; y: number }) => {
-      update({
+      update?.({
         forward: y > threshold,
         backward: y < -threshold,
         left: x < -threshold,
@@ -33,7 +33,7 @@ function useControllerState({
 
   const handleCamera = useCallback(
     ({ x, y }: { x: number; y: number }) => {
-      update({
+      update?.({
         cameraUp: y > threshold,
         cameraDown: y < -threshold,
         cameraLeft: x < -threshold,
@@ -45,7 +45,7 @@ function useControllerState({
 
   const setAutomation = useCallback(
     (value: boolean) => {
-      update({
+      update?.({
         automation: value,
       });
     },
@@ -54,7 +54,7 @@ function useControllerState({
 
   const setSpeed = useCallback(
     (value: boolean) => {
-      update({
+      update?.({
         speed: value,
       });
     },

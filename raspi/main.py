@@ -35,15 +35,14 @@ system_status_stream = MessageAnnouncer(size=1)
 controller = ControllerState(sunfounder_port=os.environ['SUNFOUNDER_PORT'])
 
 def detect_road_signs(img):
-  res = requests.post(
-    os.environ['ROAD_SIGN_DETECTION_URL'],
-    files={ 'image': img },
-  )
-
-  if res.status_code != 200:
-    raise Exception('Failed to call road-sign-detection endpoint')
-  
-  return res.json()
+  try:
+    res = requests.post(
+      os.environ['ROAD_SIGN_DETECTION_URL'],
+      files={ 'image': img },
+    )
+    return res.json() if res.status_code == 200 else None
+  except:
+    return None
 
 def read_cpu_thermal():
   if not hasattr(psutil, 'sensors_temperatures'):
@@ -65,7 +64,8 @@ def run_road_sign_detection():
     if not controller.automation:
       continue
     detections = detect_road_signs(frame)
-    if not controller.automation:
+    controller.update({ 'road_sign_detection_available': detections != None })
+    if not controller.automation or not detections:
       continue
     road_sign_stream.announce(detections)
 

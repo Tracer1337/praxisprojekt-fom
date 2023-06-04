@@ -20,6 +20,8 @@ export type ObjectDetection = {
 };
 
 export type ControllerState = {
+  sunfounderAvailable: boolean;
+  roadSignDetectionAvailable: boolean;
   forward: boolean;
   backward: boolean;
   left: boolean;

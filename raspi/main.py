@@ -4,6 +4,7 @@ from flask import Flask, Response, send_from_directory
 from flask_cors import CORS
 import json
 import os
+import psutil
 from message_announcer import MessageAnnouncer
 from threading import Thread
 from dotenv import load_dotenv
@@ -29,6 +30,7 @@ cv2.setUseOptimized(True)
 
 road_sign_stream = MessageAnnouncer(size=5)
 camera_stream = MessageAnnouncer(size=1)
+system_status_stream = MessageAnnouncer(size=1)
 
 controller = ControllerState(sunfounder_port=os.environ['SUNFOUNDER_PORT'])
 
@@ -42,6 +44,18 @@ def detect_road_signs(img):
     raise Exception('Failed to call road-sign-detection endpoint')
   
   return res.json()
+
+def read_cpu_thermal():
+  if not hasattr(psutil, 'sensors_temperatures'):
+    return
+  sensor = psutil.sensors_temperatures().get('cpu-thermal', [None])[0]
+  if not sensor:
+    return
+  return {
+    'current': sensor.current,
+    'high': bool(sensor.high),
+    'critical': bool(sensor.critical),
+  }
 
 def run_road_sign_detection():
   print("Run Road Sign Detection")
@@ -63,6 +77,16 @@ def run_camera_capture():
       continue
     frame = cv2.imencode('.jpg', img)[1].tobytes()
     camera_stream.announce(frame)
+
+def run_system_status_capture():
+  print("Run System Status Capture")
+  while True:
+    cpu_usage = psutil.cpu_percent(interval=1)
+    cpu_thermal = read_cpu_thermal()
+    system_status_stream.announce({
+      'cpu_usage': cpu_usage,
+      'cpu_thermal': cpu_thermal
+    })
 
 app = Flask(__name__)
 CORS(app)
@@ -129,6 +153,15 @@ def emit_controller_updates():
       'data': controller.__dict__()
     }))
 
+def emit_system_status_updates():
+  messages = system_status_stream.listen()
+  while True:
+    msg = messages.get()
+    ws.send_message_to_all(json.dumps({
+      'event': 'system.status',
+      'data': msg
+    }))
+
 def start_server():
   ws.run_forever(threaded=True)
 
@@ -136,12 +169,16 @@ def start_server():
 
   Thread(target=emit_controller_updates).start()
 
+  Thread(target=emit_system_status_updates).start()
+
   app.run(host='0.0.0.0', port=9000, threaded=True)
 
 if __name__ == '__main__':
   Thread(target=run_road_sign_detection).start()
 
   Thread(target=run_camera_capture).start()
+
+  Thread(target=run_system_status_capture).start()
 
   controller.setup()
 

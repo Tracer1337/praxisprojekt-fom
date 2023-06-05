@@ -3,12 +3,16 @@ import useControllerState from "./hooks/useControllerState";
 import Joystick from "./Joystick";
 import MemoryIcon from "@mui/icons-material/Memory";
 import SpeedIcon from "@mui/icons-material/Speed";
+import ReplayIcon from "@mui/icons-material/Replay";
 import { isMobile } from "../../lib/responsive";
 import useKeyboardControls from "./hooks/useKeyboardControls";
 import useControllerUpdate from "./hooks/useControllerUpdate";
+import useControllerReset from "./hooks/useControllerReset";
 
 function Controller() {
   const update = useControllerUpdate();
+
+  const reset = useControllerReset();
 
   const { state, handleMove, handleCamera, setAutomation, setSpeed } =
     useControllerState({ update });
@@ -72,8 +76,11 @@ function Controller() {
       <ToggleButton {...automationProps} sx={{ mr: 4 }}>
         <MemoryIcon />
       </ToggleButton>
-      <ToggleButton {...speedProps}>
+      <ToggleButton {...speedProps} sx={{ mr: 4 }}>
         <SpeedIcon />
+      </ToggleButton>
+      <ToggleButton value="reset" selected onChange={reset}>
+        <ReplayIcon />
       </ToggleButton>
     </Stack>
   );

@@ -20,8 +20,8 @@ export type ObjectDetection = {
 };
 
 export type ControllerState = {
-  sunfounderAvailable: boolean;
-  roadSignDetectionAvailable: boolean;
+  sunfounderAvailable: boolean | null;
+  roadSignDetectionAvailable: boolean | null;
   forward: boolean;
   backward: boolean;
   left: boolean;
@@ -43,10 +43,14 @@ export type SystemStatus = {
   };
 };
 
-export type WebsocketSendEvent = {
-  event: "controller.update";
-  data: Partial<ControllerState>;
-};
+export type WebsocketSendEvent =
+  | {
+      event: "controller.update";
+      data: Partial<ControllerState>;
+    }
+  | {
+      event: "controller.reset";
+    };
 
 export type WebsocketReceiveEvent =
   | {

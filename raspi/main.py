@@ -64,8 +64,11 @@ def run_road_sign_detection():
     if not controller.automation:
       continue
     detections = detect_road_signs(frame)
-    controller.update({ 'road_sign_detection_available': detections != None })
-    if not controller.automation or not detections:
+    controller.update({
+      'road_sign_detection_available': detections != None,
+      'automation': controller.automation and detections != None,
+    })
+    if not controller.automation:
       continue
     road_sign_stream.announce(detections)
 
@@ -115,15 +118,18 @@ def traffic_sign(objectId):
 
 def message_received(client, server, message):
   message = json.loads(message)
-  event, data = message['event'], message['data']
-  if event == 'controller.update':
-    try:
+  event, data = message.get('event'), message.get('data')
+  try:
+    if event == 'controller.update':
       controller.update(data)
-    except Exception as e:
-      server.send_message(client, json.dumps({
-        'event': 'error',
-        'data': str(e),
-      }))
+    if event == 'controller.reset':
+      controller.reset()
+      controller.setup()
+  except Exception as e:
+    server.send_message(client, json.dumps({
+      'event': 'error',
+      'data': str(e),
+    }))    
 
 ws.set_fn_message_received(message_received)
 
@@ -179,8 +185,6 @@ if __name__ == '__main__':
   Thread(target=run_camera_capture).start()
 
   Thread(target=run_system_status_capture).start()
-
-  controller.setup()
 
   start_server()
 

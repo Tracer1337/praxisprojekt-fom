@@ -43,8 +43,13 @@ class ControllerState:
 
   def __init__(self, sunfounder_port):
     self.sunfounder_port = sunfounder_port
-    self.sunfounder_available = True
-    self.road_sign_detection_available = True
+    self.cv = Condition()
+
+    self.reset()
+  
+  def reset(self):
+    self.sunfounder_available = None
+    self.road_sign_detection_available = None
 
     self.forward = False
     self.backward = False
@@ -59,7 +64,7 @@ class ControllerState:
     self.speed = True
     self.automation = False
 
-    self.cv = Condition()
+    self.notify()
 
   def run_sunfounder_action(self, action, value=None):
     action, value = self.get_query(action, value)
@@ -106,6 +111,9 @@ class ControllerState:
 
     self.sync(diff)
 
+    self.notify()
+
+  def notify(self):
     with self.cv:
       self.cv.notify_all()
   

@@ -1,4 +1,5 @@
 import { Box, Typography, Divider } from "@mui/material";
+import { match } from "ts-pattern";
 import SpeedIcon from "@mui/icons-material/Speed";
 import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
 import CheckIcon from "@mui/icons-material/Check";
@@ -18,13 +19,11 @@ function ConnectionStatus() {
   const divider = <Divider orientation="vertical" sx={{ mx: 3, height: 46 }} />;
 
   const availability = (status: boolean | null) =>
-    status === null ? (
-      <HorizontalRuleIcon fontSize="small" />
-    ) : status ? (
-      <CheckIcon fontSize="small" />
-    ) : (
-      <CloseIcon fontSize="small" />
-    );
+    match(status)
+      .with(null, () => <HorizontalRuleIcon fontSize="small" />)
+      .with(true, () => <CheckIcon fontSize="small" />)
+      .with(false, () => <CloseIcon fontSize="small" />)
+      .exhaustive();
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -69,13 +68,10 @@ function ConnectionStatus() {
           <DeviceThermostatIcon fontSize="small" />
           <Typography
             variant="subtitle2"
-            color={
-              systemStatus?.cpu_thermal?.high
-                ? "warning.light"
-                : systemStatus?.cpu_thermal?.critical
-                ? "error.main"
-                : "initial"
-            }
+            color={match(systemStatus?.cpu_thermal)
+              .with({ high: true }, () => "warning.light")
+              .with({ critical: true }, () => "error.main")
+              .otherwise(() => "initial")}
           >
             {systemStatus.cpu_thermal_label}
           </Typography>
@@ -86,7 +82,7 @@ function ConnectionStatus() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          width: 170,
+          width: 150,
           "& > .MuiBox-root": {
             display: "flex",
             alignItems: "center",
@@ -102,7 +98,7 @@ function ConnectionStatus() {
           {availability(controller.state?.sunfounderAvailable ?? null)}
         </Box>
         <Box>
-          <Typography variant="subtitle2">Road Sign Detection:</Typography>
+          <Typography variant="subtitle2">Objekterkennung:</Typography>
           {availability(controller.state?.roadSignDetectionAvailable ?? null)}
         </Box>
       </Box>
